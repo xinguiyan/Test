@@ -1,0 +1,41 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+# Mac OS X Finder and whatnot
+.DS_Store
+.idea
+._*
+
+## Build generated
+Pods/
+/Test/photos/
+
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+## Other
+*.moved-aside
+*.xcuserstate
+*.xccheckout
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.app
+*.xcconfig
+
+Package/*
+Podfile.lock
+Pods/Manifest.lock
+
+#CocoaPods
+#Pods/
