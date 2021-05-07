@@ -26,10 +26,10 @@
 
 #import "FacematchController.h"
 
-#import <Masonry/Masonry.h>
-#import <YYKit/YYKit.h>
-#import <SVProgressHUD/SVProgressHUD.h>
-#import "MMLocationParser.h"
+//#import <Masonry/Masonry.h>
+//#import <YYKit/YYKit.h>
+//#import <SVProgressHUD/SVProgressHUD.h>
+//#import "MMLocationParser.h"
 
 #import "JQUploadPicRequest.h"
 
@@ -59,13 +59,13 @@
 //    self.faceIndex = 0;
 //    [self initUI];
     
-//    NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
-//    NSArray *users = [self readCsv];
-//    [self getAgesOfUsers:users];
+    NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
+    NSArray *users = [self readCsv];
+    [self getAgesOfUsers:users];
     
-    for (int i=0; i<100; i++) {
-        NSLog(@"%@", [self calcDate:@[@"",@"",@"",@"",@"",@"",@"1979",@"10",@"23"] age:26]);
-    }
+//    for (int i=0; i<100; i++) {
+//        NSLog(@"%@", [self calcDate:@[@"",@"",@"",@"",@"",@"",@"1984",@"05",@"23"] age:18]);
+//    }
     
 //    NSLog(@"%@", [self organOfAddress:@"山西省太原市小店区王村北街寇庄小区5号楼7单元1002"]);
 }
@@ -222,7 +222,7 @@
                     continue;
                 }
                 if ([s4 containsString:@"新区"]) {
-                    NSLog(@"%@-%@ : 【%@】 新区注意查看", s1, s2, s4);
+//                    NSLog(@"%@-%@ : 【%@】 新区注意查看", s1, s2, s4);
                 }
                 if (![s4 containsString:@"省"] || ![s4 containsString:@"巿"]) {
 //                    NSLog(@"%@-%@ : 【%@】 缺少省市，注意查看", s1, s2, s4);
@@ -306,7 +306,7 @@
     
     NSString *path = [[NSBundle mainBundle] pathForResource:serial ofType:@"png"];
     if (![path isNotBlank]) {
-        NSLog(@"找不到序号：【%@】的照片", serial);
+//        NSLog(@"找不到序号：【%@】的照片", serial);
         [self getNextUser];
         return;
     }
@@ -351,54 +351,54 @@
                                        format:@"yyyy.MM.dd"];
     
     NSDate *now = NSDate.now;
-    NSDate *date; // 签发日期
     
-    NSInteger ca = now.year - y; // 当前年龄
-    if (ca > age) {
-        NSInteger diff = ca - age; // 当前年龄与照片年龄差
-        if (ca <= 45 && diff >= 20) { // 当前年龄超过45，照片年龄相差了20岁以上
-            age = ca - 17;
-            diff = 17;
+    
+    NSDate *start = [birthday dateByAddingYears:age];
+    NSDate *end;
+    
+    while (true) {
+        if ([start timeIntervalSinceNow] > 0) {
+            NSInteger r = arc4random() % (365 * 2);
+            start = [now dateByAddingDays:-r];
+            end = [self endOfValid:start birthday:birthday];
+        } else {
+            NSInteger r = arc4random() % 365;
+            start = [start dateByAddingDays:-r];
+            end = [self endOfValid:start birthday:birthday];
         }
         
-        if (age <= 45 && diff >= 20) { // 年龄差大于20年，县城照片年龄小于45
-            date = [now dateByAddingYears:-17];
-        } else if (age <= 25 && diff >= 10) { // 年龄差大于10年，且照片年龄小于25
-            date = [now dateByAddingYears:-7];
+        if (end && [end timeIntervalSinceNow] < 0) {
+            start = [start dateByAddingYears:1];
         } else {
-            date = [now dateByAddingYears:-diff];
+            break;
         }
-    } else {
-        date = now;
     }
-    // 随机减去一个天数（一年以内）
-    NSInteger r = arc4random() % 365;
-    date = [date dateByAddingDays:-r];
     
-    NSString *start = [date stringWithFormat:@"yyyy.MM.dd"];
-    NSString *end;
-    NSInteger dy = date.year - y; // 签收日期 - 身份证年份 = 签收时候的年龄
-    if (dy <= 25) {
-        if ([[birthday dateByAddingYears:25] timeIntervalSinceDate:date] > 0) {
-            date = [date dateByAddingYears:10];
-        } else {
-            date = [date dateByAddingYears:20];
-        }
-        end = [date stringWithFormat:@"yyyy.MM.dd"];
-    } else if (dy <= 45) {
-        if ([[birthday dateByAddingYears:45] timeIntervalSinceDate:date] > 0) {
-            date = [date dateByAddingYears:20];
-            end = [date stringWithFormat:@"yyyy.MM.dd"];
-        } else {
-            end = @"长期";
-        }
-    } else {
-        end = @"长期";
+    return [NSString stringWithFormat:@"%@-%@",
+                [start stringWithFormat:@"yyyy.MM.dd"],
+                end ? [end stringWithFormat:@"yyyy.MM.dd"] : @"长期"];
+}
+
+- (NSDate *)endOfValid:(NSDate *)start birthday:(NSDate *)birthday {
+    // 计算周岁
+    NSInteger age = start.year - birthday.year;
+    if ([[birthday dateByAddingYears:age] timeIntervalSinceDate:start] > 0) {
+        age--;
     }
-    return [NSString stringWithFormat:@"%@-%@", start, end];
+    
+    NSDate *end;
+    if (age < 16) {
+        end = [start dateByAddingYears:5];
+    } else if (age < 25) {
+        end = [start dateByAddingYears:10];
+    } else if (age < 45) {
+        end = [start dateByAddingYears:20];
+    }
+    return end;
 }
 
 - (void)writeToFile:(NSArray *)values {
+    /*
     NSString *name = [NSString stringWithFormat:@"%@-%@", values[0], values[1]];
     
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
@@ -411,6 +411,9 @@
     
     NSString *content = [values componentsJoinedByString:@"\r\n"];
     [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+     */
+    
+    NSLog(@"values : %@", values);
 }
 
 @end

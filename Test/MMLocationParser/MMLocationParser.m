@@ -66,7 +66,7 @@
 - (NSString *)parserCity {
     NSString *pattern = @"^.*?市|.*?自治州|.*?地区|.*?行政单位";
     NSString *result = [self matchWithPattern:pattern];
-    if (![result isEqualToString:[self province]]) {
+    if (![result isEqualToString:[self province]] && [self province]) {
         result = [result stringByReplacingOccurrencesOfString:[self province] withString:@""];
     }
     return result;
