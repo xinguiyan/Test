@@ -158,7 +158,7 @@
 #pragma mark - 内部方法
 
 - (NSArray *)readCsv {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"2" ofType:@"csv"];
     NSError *error = nil;
     NSString *content = [NSString stringWithContentsOfFile:path
                                                   encoding:NSUTF8StringEncoding
@@ -398,7 +398,6 @@
 }
 
 - (void)writeToFile:(NSArray *)values {
-    /*
     NSString *name = [NSString stringWithFormat:@"%@-%@", values[0], values[1]];
     
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
@@ -411,9 +410,8 @@
     
     NSString *content = [values componentsJoinedByString:@"\r\n"];
     [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
-     */
     
-    NSLog(@"values : %@", values);
+//    NSLog(@"values : %@", values);
 }
 
 @end

@@ -42,10 +42,10 @@
     
 //    [self initUI];
     
-//    NSArray *companys = [self readCsv];
-    NSArray *companys = @[
-    @{@"serial": @"135", @"name": @"厦门华方众选商贸有限公司"},
-    ];
+    NSArray *companys = [self readCsv];
+//    NSArray *companys = @[
+//    @{@"serial": @"135", @"name": @"厦门华方众选商贸有限公司"},
+//    ];
     for (NSDictionary *dict in companys) {
         NSArray *values = [self getCompanyInfo:dict];
         if (values.count) {
@@ -123,7 +123,7 @@
 #pragma mark - 内部方法
 
 - (NSArray *)readCsv {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"2" ofType:@"csv"];
     NSError *error = nil;
     NSString *content = [NSString stringWithContentsOfFile:path
                                                   encoding:NSUTF8StringEncoding
@@ -144,7 +144,7 @@
     NSArray *a = [array objectOrNilAtIndex:0];
     if (a) {
         for (NSString *s in a) {
-            if ([s containsString:@"公司"]) {
+            if ([s containsString:@"公司"] && column==NSNotFound) {
                 column = [a indexOfObject:s];
             } else if ([s containsString:@"序号"]) {
                 serial_column = [a indexOfObject:s];
