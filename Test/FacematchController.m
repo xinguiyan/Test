@@ -64,15 +64,15 @@
     
     [self getAddressList];
     
-//    NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
-//    NSArray *users = [self readCsv];
-//    [self getAgesOfUsers:users];
+    NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
+    NSArray *users = [self readCsv];
+    [self getAgesOfUsers:users];
     
 //    for (int i=0; i<100; i++) {
 //        NSLog(@"%@", [self calcDate:@[@"",@"",@"",@"",@"",@"",@"1984",@"05",@"23"] age:18]);
 //    }
     
-    NSLog(@"%@", [self organOfAddress:@"辽宁省本溪满族自治县观音阁向阳街南二巷6号2-1"]);
+//    NSLog(@"%@", [self organOfAddress:@"辽宁省本溪满族自治县观音阁向阳街南二巷6号2-1"]);
 }
 
 #pragma mark - Notification
@@ -369,6 +369,13 @@
             NSMutableArray *array = [NSMutableArray arrayWithArray:userInfo];
             [array addObject:time];
             [array addObject:[NSString stringWithFormat:@"%ld", age]];
+            
+            // 性别判断
+            NSString *gender = dict[@"attributes"][@"gender"][@"value"];
+            NSString *string = [gender isEqualToString:@"Female"] ? @"女" : @"男";
+            if (![userInfo[2] isEqualToString:string]) {
+                NSLog(@"%@-%@ : 【%@】 性别有问题", userInfo[0], userInfo[1], userInfo[2]);
+            }
             
             [self writeToFile:array];
         } else {
