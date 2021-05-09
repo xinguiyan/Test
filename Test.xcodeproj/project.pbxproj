@@ -66,6 +66,8 @@
 		BD856FBA2647BC0E00E17909 /* 1811.png in Resources */ = {isa = PBXBuildFile; fileRef = BD856F812647BC0E00E17909 /* 1811.png */; };
 		BD856FBB2647BC0E00E17909 /* 2089.png in Resources */ = {isa = PBXBuildFile; fileRef = BD856F822647BC0E00E17909 /* 2089.png */; };
 		BD856FBE2647CC7600E17909 /* 2.csv in Resources */ = {isa = PBXBuildFile; fileRef = BD856FBD2647CC7600E17909 /* 2.csv */; };
+		BD856FC22647F69300E17909 /* BRCity.json in Resources */ = {isa = PBXBuildFile; fileRef = BD856FC12647F69300E17909 /* BRCity.json */; };
+		BD856FC72647F7F300E17909 /* BRAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BD856FC62647F7F300E17909 /* BRAddressModel.m */; };
 		BDA23FCF2625D405000B3B8B /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDA23FCE2625D405000B3B8B /* WebViewController.m */; };
 		BDA23FD62625D705000B3B8B /* URLSchemeHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = BDA23FD52625D705000B3B8B /* URLSchemeHandler.m */; };
 		BDA23FD92625DE75000B3B8B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDA23FD82625DE75000B3B8B /* MobileCoreServices.framework */; };
@@ -147,6 +149,9 @@
 		BD856F812647BC0E00E17909 /* 1811.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1811.png; sourceTree = "<group>"; };
 		BD856F822647BC0E00E17909 /* 2089.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2089.png; sourceTree = "<group>"; };
 		BD856FBD2647CC7600E17909 /* 2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2.csv; sourceTree = "<group>"; };
+		BD856FC12647F69300E17909 /* BRCity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BRCity.json; sourceTree = "<group>"; };
+		BD856FC52647F7F300E17909 /* BRAddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRAddressModel.h; sourceTree = "<group>"; };
+		BD856FC62647F7F300E17909 /* BRAddressModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRAddressModel.m; sourceTree = "<group>"; };
 		BDA23FCD2625D405000B3B8B /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		BDA23FCE2625D405000B3B8B /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		BDA23FD42625D705000B3B8B /* URLSchemeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLSchemeHandler.h; sourceTree = "<group>"; };
@@ -267,6 +272,15 @@
 			path = photos;
 			sourceTree = "<group>";
 		};
+		BD856FC42647F7C800E17909 /* BRAddress */ = {
+			isa = PBXGroup;
+			children = (
+				BD856FC52647F7F300E17909 /* BRAddressModel.h */,
+				BD856FC62647F7F300E17909 /* BRAddressModel.m */,
+			);
+			path = BRAddress;
+			sourceTree = "<group>";
+		};
 		BDDAE2D226427A7A00457C9D /* JQFaceOCR */ = {
 			isa = PBXGroup;
 			children = (
@@ -310,11 +324,13 @@
 		BDFA6E6325A34004005C59CF /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				BD856FC42647F7C800E17909 /* BRAddress */,
 				BDDAE1F3263E93E900457C9D /* 1.csv */,
 				BD856FBD2647CC7600E17909 /* 2.csv */,
 				BDFA6E6425A34004005C59CF /* AppDelegate.h */,
 				BDFA6E6525A34004005C59CF /* AppDelegate.m */,
 				BDFA6E7025A34006005C59CF /* Assets.xcassets */,
+				BD856FC12647F69300E17909 /* BRCity.json */,
 				BDDAE20426423F5F00457C9D /* FacematchController.h */,
 				BDDAE20526423F5F00457C9D /* FacematchController.m */,
 				BDFA6E7525A34006005C59CF /* Info.plist */,
@@ -325,6 +341,7 @@
 				BDFA6E7F25A340CB005C59CF /* OneController.h */,
 				BDFA6E8025A340CB005C59CF /* OneController.m */,
 				BD6BDBC626450CEA00C67FE1 /* photos */,
+				BD6BDD572645182B00C67FE1 /* PrefixHeader.pch */,
 				BDFA6E8525A340D6005C59CF /* TwoController.h */,
 				BDFA6E8625A340D6005C59CF /* TwoController.m */,
 				BDA23FD42625D705000B3B8B /* URLSchemeHandler.h */,
@@ -335,7 +352,6 @@
 				BDA23FCE2625D405000B3B8B /* WebViewController.m */,
 				BDA23FDF2625EA1F000B3B8B /* WKWebView+Custom.h */,
 				BDA23FE02625EA1F000B3B8B /* WKWebView+Custom.m */,
-				BD6BDD572645182B00C67FE1 /* PrefixHeader.pch */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -453,6 +469,7 @@
 				BD856F922647BC0E00E17909 /* 2087.png in Resources */,
 				BD856FBA2647BC0E00E17909 /* 1811.png in Resources */,
 				BD856F9A2647BC0E00E17909 /* 1812.png in Resources */,
+				BD856FC22647F69300E17909 /* BRCity.json in Resources */,
 				BD856F882647BC0E00E17909 /* 1847.png in Resources */,
 				BD856F942647BC0E00E17909 /* 2013.png in Resources */,
 				BD856FA12647BC0E00E17909 /* 1963.png in Resources */,
@@ -526,6 +543,7 @@
 				BDDAE20626423F6000457C9D /* FacematchController.m in Sources */,
 				BDFA6E6625A34004005C59CF /* AppDelegate.m in Sources */,
 				BDFA6E7725A34006005C59CF /* main.m in Sources */,
+				BD856FC72647F7F300E17909 /* BRAddressModel.m in Sources */,
 				BDDAE2D926427A7A00457C9D /* UIImage+GCAdd.m in Sources */,
 				BDDAE2DA26427A7A00457C9D /* JQResulltViewController.m in Sources */,
 				BDDAE3142642DB7900457C9D /* MMLocationParser.m in Sources */,

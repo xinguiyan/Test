@@ -32,6 +32,7 @@
 //#import "MMLocationParser.h"
 
 #import "JQUploadPicRequest.h"
+#import "BRAddressModel.h"
 
 @interface FacematchController ()
 
@@ -40,6 +41,8 @@
 
 @property (nonatomic, copy) NSArray *users;
 @property (nonatomic, assign) NSInteger index;
+
+@property (nonatomic, copy) NSArray *provinceModelArr;
 
 @end
 
@@ -59,15 +62,17 @@
 //    self.faceIndex = 0;
 //    [self initUI];
     
-    NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
-    NSArray *users = [self readCsv];
-    [self getAgesOfUsers:users];
+    [self getAddressList];
+    
+//    NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
+//    NSArray *users = [self readCsv];
+//    [self getAgesOfUsers:users];
     
 //    for (int i=0; i<100; i++) {
 //        NSLog(@"%@", [self calcDate:@[@"",@"",@"",@"",@"",@"",@"1984",@"05",@"23"] age:18]);
 //    }
     
-//    NSLog(@"%@", [self organOfAddress:@"山西省太原市小店区王村北街寇庄小区5号楼7单元1002"]);
+    NSLog(@"%@", [self organOfAddress:@"辽宁省本溪满族自治县观音阁向阳街南二巷6号2-1"]);
 }
 
 #pragma mark - Notification
@@ -204,6 +209,10 @@
             NSString *s2 = [a objectOrNilAtIndex:name];
             if ([s1 isNotBlank] && [s2 isNotBlank]) {
                 NSString *s3 = [a objectOrNilAtIndex:cid];
+                if (s3.length != 18) {
+                    NSLog(@"%@-%@ : 【%@】 身份证有问题", s1, s2, s3);
+                    continue;
+                }
                 NSString *year = [s3 substringWithRange:NSMakeRange(6, 4)];
                 NSString *month = [s3 substringWithRange:NSMakeRange(10, 2)];
                 NSString *day = [s3 substringWithRange:NSMakeRange(12, 2)];
@@ -249,6 +258,7 @@
 - (NSString *)organOfAddress:(NSString *)address {
     NSString *organ;
     
+    /*
     MMLocationParser *parser = [MMLocationParser parserWithLoation:address];
 //    NSLog(@"%@",parser.location);
 //    NSLog(@"输出:");
@@ -266,6 +276,35 @@
     NSString *city = parser.city;
     NSString *qu = parser.area;
     NSString *xian = parser.area;
+    
+    if (hasQu && qu.length >= 3) {
+        qu = [qu substringToIndex:qu.length-1];
+    }
+    
+    if (hasXian) {
+        organ = [NSString stringWithFormat:@"%@公安局", xian];
+    } else if (hasCity) {
+        if (hasQu) {
+            organ = [NSString stringWithFormat:@"%@公安局%@分局", city, qu];
+        } else {
+            organ = [NSString stringWithFormat:@"%@公安局", city];
+        }
+    }
+     */
+    
+    
+    NSArray *array = [self getSSQOfAddress:address];
+    if (array.count == 0) {
+        return organ;
+    }
+    
+    NSString *city = array[1];
+    NSString *qu = array[2];
+    NSString *xian = array[2];
+    
+    BOOL hasCity = [city isNotBlank];
+    BOOL hasQu = [qu hasSuffix:@"区"];
+    BOOL hasXian = [xian hasSuffix:@"县"];
     
     if (hasQu && qu.length >= 3) {
         qu = [qu substringToIndex:qu.length-1];
@@ -412,6 +451,133 @@
     [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
     
 //    NSLog(@"values : %@", values);
+}
+
+#pragma mark - 地址
+
+- (void)getAddressList {
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"BRCity" ofType:@"json"];
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    NSArray *cityArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+    self.provinceModelArr = [self getProvinceModelArr:cityArray];
+}
+
+- (NSArray <BRProvinceModel *>*)getProvinceModelArr:(NSArray *)dataSourceArr {
+    NSMutableArray *tempArr1 = [NSMutableArray array];
+    for (NSDictionary *proviceDic in dataSourceArr) {
+        BRProvinceModel *proviceModel = [[BRProvinceModel alloc]init];
+        proviceModel.code = [proviceDic objectForKey:@"code"];
+        proviceModel.name = [proviceDic objectForKey:@"name"];
+        proviceModel.index = [dataSourceArr indexOfObject:proviceDic];
+        NSArray *cityList = [proviceDic.allKeys containsObject:@"cityList"] ? [proviceDic objectForKey:@"cityList"] : [proviceDic objectForKey:@"citylist"];
+        NSMutableArray *tempArr2 = [NSMutableArray array];
+        for (NSDictionary *cityDic in cityList) {
+            BRCityModel *cityModel = [[BRCityModel alloc]init];
+            cityModel.code = [cityDic objectForKey:@"code"];
+            cityModel.name = [cityDic objectForKey:@"name"];
+            cityModel.index = [cityList indexOfObject:cityDic];
+            NSArray *areaList = [cityDic.allKeys containsObject:@"areaList"] ? [cityDic objectForKey:@"areaList"] : [cityDic objectForKey:@"arealist"];
+            NSMutableArray *tempArr3 = [NSMutableArray array];
+            for (NSDictionary *areaDic in areaList) {
+                BRAreaModel *areaModel = [[BRAreaModel alloc]init];
+                areaModel.code = [areaDic objectForKey:@"code"];
+                areaModel.name = [areaDic objectForKey:@"name"];
+                areaModel.index = [areaList indexOfObject:areaDic];
+                [tempArr3 addObject:areaModel];
+            }
+            cityModel.arealist = [tempArr3 copy];
+            [tempArr2 addObject:cityModel];
+        }
+        proviceModel.citylist = [tempArr2 copy];
+        [tempArr1 addObject:proviceModel];
+    }
+    return [tempArr1 copy];
+}
+
+- (NSArray *)getSSQOfAddress:(NSString *)address {
+    if (![address isNotBlank]) {
+        return nil;
+    }
+    
+    NSArray *zzq = @[@"内蒙古",@"新疆",@"广西",@"西藏",@"宁夏"]; // 自治区
+    NSArray *zxs = @[@"北京",@"上海",@"天津",@"重庆"]; // 直辖市
+    NSArray *tbxzq = @[@"香港", @"澳门", @"台湾"]; // 特别行政区
+    
+    NSString *p;
+    NSString *c;
+    NSString *a;
+    NSString *o;
+    for (BRProvinceModel *province in self.provinceModelArr) {
+        if ([address hasPrefix:province.name]) {
+            NSString *tmp = [address substringFromIndex:province.name.length];
+            if ([zzq containsObject:province.name]) {
+                if ([tmp hasPrefix:@"自治区"]) {
+                    tmp = [tmp substringFromIndex:3];
+                }
+                p = province.name;
+            } else if ([zxs containsObject:province.name] || [tbxzq containsObject:province.name]) {
+                tmp = address;
+                p = @"";
+            } else {
+                if ([tmp hasPrefix:@"省"]) {
+                    tmp = [tmp substringFromIndex:1];
+                }
+                p = [province.name stringByAppendingString:@"省"];
+            }
+            
+            for (BRCityModel *city in province.citylist) {
+                if ([tmp hasPrefix:city.name]) {
+                    tmp = [tmp substringFromIndex:city.name.length];
+                    if ([zxs containsObject:city.name]) {
+                        if ([tmp hasPrefix:@"市"]) {
+                            tmp = [tmp substringFromIndex:1];
+                        }
+                        c = [city.name stringByAppendingString:@"市"];
+                    } else if ([tbxzq containsObject:city.name]) {
+                        c = city.name;
+                    } else {
+                        if ([tmp hasPrefix:@"市"]) {
+                            tmp = [tmp substringFromIndex:1];
+                            c = [city.name stringByAppendingString:@"市"];
+                        } else if ([tmp hasPrefix:@"县"]) {
+                            tmp = [tmp substringFromIndex:1];
+                            c = [city.name stringByAppendingString:@"县"];
+                        } else {
+                            c = [city.name stringByAppendingString:@"市"];
+                        }
+                    }
+                    
+                    for (BRAreaModel *area in city.arealist) {
+                        if ([tmp hasPrefix:area.name]) {
+                            a = area.name;
+                            
+                            o = [tmp substringFromIndex:area.name.length];
+                            // 补齐括号
+                            if ([o containsString:@"（"] && ![o containsString:@"）"]) {
+                                o = [o stringByAppendingString:@"）"];
+                            }
+                            if ([o containsString:@"("] && ![o containsString:@")"]) {
+                                o = [o stringByAppendingString:@")"];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (!a || !o) {
+                a = @"";
+                o = tmp ? tmp : @"";
+            }
+            
+            break;
+        }
+    }
+    
+    if ([c isNotBlank]) {
+        return @[p, c, a, o];
+    }
+    
+    return nil;
 }
 
 @end
