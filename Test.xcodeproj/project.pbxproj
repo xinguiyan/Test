@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		590F7C40C8BAE71A9780E40D /* Pods_Test.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F4C433743BD5833F3737EC9 /* Pods_Test.framework */; };
+		BD4AFAC02648DB2D0049222C /* PictureNamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4AFABF2648DB2D0049222C /* PictureNamingController.m */; };
 		BD856F832647BC0E00E17909 /* 1651.png in Resources */ = {isa = PBXBuildFile; fileRef = BD856F4A2647BC0B00E17909 /* 1651.png */; };
 		BD856F842647BC0E00E17909 /* 1564.png in Resources */ = {isa = PBXBuildFile; fileRef = BD856F4B2647BC0B00E17909 /* 1564.png */; };
 		BD856F852647BC0E00E17909 /* 1597.png in Resources */ = {isa = PBXBuildFile; fileRef = BD856F4C2647BC0B00E17909 /* 1597.png */; };
@@ -90,6 +91,8 @@
 /* Begin PBXFileReference section */
 		1F4C433743BD5833F3737EC9 /* Pods_Test.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Test.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6A42332C79C7C099CB45AB2 /* Pods-Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Test.release.xcconfig"; path = "Target Support Files/Pods-Test/Pods-Test.release.xcconfig"; sourceTree = "<group>"; };
+		BD4AFABE2648DB2C0049222C /* PictureNamingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PictureNamingController.h; sourceTree = "<group>"; };
+		BD4AFABF2648DB2D0049222C /* PictureNamingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PictureNamingController.m; sourceTree = "<group>"; };
 		BD6BDD572645182B00C67FE1 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		BD856F4A2647BC0B00E17909 /* 1651.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1651.png; sourceTree = "<group>"; };
 		BD856F4B2647BC0B00E17909 /* 1564.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1564.png; sourceTree = "<group>"; };
@@ -324,12 +327,12 @@
 		BDFA6E6325A34004005C59CF /* Test */ = {
 			isa = PBXGroup;
 			children = (
-				BD856FC42647F7C800E17909 /* BRAddress */,
 				BDDAE1F3263E93E900457C9D /* 1.csv */,
 				BD856FBD2647CC7600E17909 /* 2.csv */,
 				BDFA6E6425A34004005C59CF /* AppDelegate.h */,
 				BDFA6E6525A34004005C59CF /* AppDelegate.m */,
 				BDFA6E7025A34006005C59CF /* Assets.xcassets */,
+				BD856FC42647F7C800E17909 /* BRAddress */,
 				BD856FC12647F69300E17909 /* BRCity.json */,
 				BDDAE20426423F5F00457C9D /* FacematchController.h */,
 				BDDAE20526423F5F00457C9D /* FacematchController.m */,
@@ -341,6 +344,8 @@
 				BDFA6E7F25A340CB005C59CF /* OneController.h */,
 				BDFA6E8025A340CB005C59CF /* OneController.m */,
 				BD6BDBC626450CEA00C67FE1 /* photos */,
+				BD4AFABE2648DB2C0049222C /* PictureNamingController.h */,
+				BD4AFABF2648DB2D0049222C /* PictureNamingController.m */,
 				BD6BDD572645182B00C67FE1 /* PrefixHeader.pch */,
 				BDFA6E8525A340D6005C59CF /* TwoController.h */,
 				BDFA6E8625A340D6005C59CF /* TwoController.m */,
@@ -543,6 +548,7 @@
 				BDDAE20626423F6000457C9D /* FacematchController.m in Sources */,
 				BDFA6E6625A34004005C59CF /* AppDelegate.m in Sources */,
 				BDFA6E7725A34006005C59CF /* main.m in Sources */,
+				BD4AFAC02648DB2D0049222C /* PictureNamingController.m in Sources */,
 				BD856FC72647F7F300E17909 /* BRAddressModel.m in Sources */,
 				BDDAE2D926427A7A00457C9D /* UIImage+GCAdd.m in Sources */,
 				BDDAE2DA26427A7A00457C9D /* JQResulltViewController.m in Sources */,
