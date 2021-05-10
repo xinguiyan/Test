@@ -163,7 +163,7 @@
 #pragma mark - 内部方法
 
 - (NSArray *)readCsv {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"2" ofType:@"csv"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
     NSError *error = nil;
     NSString *content = [NSString stringWithContentsOfFile:path
                                                   encoding:NSUTF8StringEncoding
@@ -189,7 +189,7 @@
     NSArray *a = [array objectOrNilAtIndex:0];
     if (a) {
         serial = [a indexOfObject:@"序号"];
-        name = [a indexOfObject:@"名字"];
+        name = [a indexOfObject:@"姓名"];
         gender = [a indexOfObject:@"性别"];
         address = [a indexOfObject:@"个人地址"];
         cid = [a indexOfObject:@"证件号码"];
@@ -227,8 +227,13 @@
                 NSString *s4 = [a objectOrNilAtIndex:address];
                 NSString *organ = [self organOfAddress:s4];
                 if (![organ isNotBlank]) {
-                    NSLog(@"%@-%@ : 【%@】 地址有问题", s1, s2, s4);
-                    continue;
+                    NSLog(@"%@-%@ : 【%@】 111地址有问题", s1, s2, s4);
+                    
+                    organ = [self organOfAddress2:s4];
+                    if (![organ isNotBlank]) {
+                        NSLog(@"%@-%@ : 【%@】 222地址有问题", s1, s2, s4);
+                        continue;
+                    }
                 }
                 if ([s4 containsString:@"新区"]) {
 //                    NSLog(@"%@-%@ : 【%@】 新区注意查看", s1, s2, s4);
@@ -258,7 +263,39 @@
 - (NSString *)organOfAddress:(NSString *)address {
     NSString *organ;
     
-    /*
+    NSArray *array = [self getSSQOfAddress:address];
+    if (array.count == 0) {
+        return organ;
+    }
+    
+    NSString *city = array[1];
+    NSString *qu = array[2];
+    NSString *xian = array[2];
+    
+    BOOL hasCity = [city isNotBlank];
+    BOOL hasQu = [qu hasSuffix:@"区"];
+    BOOL hasXian = [xian hasSuffix:@"县"];
+    
+    if (hasQu && qu.length >= 3) {
+        qu = [qu substringToIndex:qu.length-1];
+    }
+    
+    if (hasXian) {
+        organ = [NSString stringWithFormat:@"%@公安局", xian];
+    } else if (hasCity) {
+        if (hasQu) {
+            organ = [NSString stringWithFormat:@"%@公安局%@分局", city, qu];
+        } else {
+            organ = [NSString stringWithFormat:@"%@公安局", city];
+        }
+    }
+    
+    return organ;
+}
+
+- (NSString *)organOfAddress2:(NSString *)address {
+    NSString *organ;
+    
     MMLocationParser *parser = [MMLocationParser parserWithLoation:address];
 //    NSLog(@"%@",parser.location);
 //    NSLog(@"输出:");
@@ -276,35 +313,6 @@
     NSString *city = parser.city;
     NSString *qu = parser.area;
     NSString *xian = parser.area;
-    
-    if (hasQu && qu.length >= 3) {
-        qu = [qu substringToIndex:qu.length-1];
-    }
-    
-    if (hasXian) {
-        organ = [NSString stringWithFormat:@"%@公安局", xian];
-    } else if (hasCity) {
-        if (hasQu) {
-            organ = [NSString stringWithFormat:@"%@公安局%@分局", city, qu];
-        } else {
-            organ = [NSString stringWithFormat:@"%@公安局", city];
-        }
-    }
-     */
-    
-    
-    NSArray *array = [self getSSQOfAddress:address];
-    if (array.count == 0) {
-        return organ;
-    }
-    
-    NSString *city = array[1];
-    NSString *qu = array[2];
-    NSString *xian = array[2];
-    
-    BOOL hasCity = [city isNotBlank];
-    BOOL hasQu = [qu hasSuffix:@"区"];
-    BOOL hasXian = [xian hasSuffix:@"县"];
     
     if (hasQu && qu.length >= 3) {
         qu = [qu substringToIndex:qu.length-1];

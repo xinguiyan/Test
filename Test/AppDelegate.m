@@ -23,8 +23,8 @@
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     
 //    ViewController *vc = [[ViewController alloc] init];
-//    FacematchController *vc = [[FacematchController alloc] init];
-    PictureNamingController *vc = [[PictureNamingController alloc] init];
+    FacematchController *vc = [[FacematchController alloc] init];
+//    PictureNamingController *vc = [[PictureNamingController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nav;

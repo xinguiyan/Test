@@ -42,10 +42,10 @@
     
 //    [self initUI];
     
-    NSArray *companys = [self readCsv];
-//    NSArray *companys = @[
-//    @{@"serial": @"135", @"name": @"厦门华方众选商贸有限公司"},
-//    ];
+//    NSArray *companys = [self readCsv];
+    NSArray *companys = @[
+    @{@"serial": @"75", @"name": @"西咸新区泾河新城富瑞吉吕会春日用品营销部"},
+    ];
     for (NSDictionary *dict in companys) {
         NSArray *values = [self getCompanyInfo:dict];
         if (values.count) {
@@ -123,7 +123,7 @@
 #pragma mark - 内部方法
 
 - (NSArray *)readCsv {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"2" ofType:@"csv"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
     NSError *error = nil;
     NSString *content = [NSString stringWithContentsOfFile:path
                                                   encoding:NSUTF8StringEncoding
