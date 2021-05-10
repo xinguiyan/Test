@@ -50,11 +50,15 @@
 
     [self initUI];
     
+    [self initDoc];
+    
     NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
 //    [self groupPhotos];
     
     NSArray *users = [self readCsv];
-    
+    for (NSArray *info in users) {
+        [self renamePhotoWithUser:info];
+    }
 }
 
 #pragma mark - Notification
@@ -93,33 +97,9 @@
 
 #pragma mark - 内部方法
 
-// 照片分组（实现效果不佳）
-- (void)groupPhotos {
+- (void)initDoc {
     NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *photos = [doc stringByAppendingPathComponent:@"photos"];
-    
     NSFileManager *manager = [NSFileManager defaultManager];
-    BOOL isDirectory;
-    BOOL isExit = [manager fileExistsAtPath:photos isDirectory:&isDirectory];
-    if (!isExit || !isDirectory) {
-        NSLog(@"不存在photos文件夹");
-        return;
-    }
-    
-    NSError *error;
-    NSArray *contents = [manager contentsOfDirectoryAtPath:photos error:&error];
-    if (error) {
-        NSLog(@"读取文件错误：%@", error);
-        return;
-    }
-    
-    NSMutableArray *array = [NSMutableArray array];
-    for (NSString *name in contents) {
-        if ([name hasSuffix:@".png"]) {
-            [array addObject:[photos stringByAppendingFormat:@"/%@", name]];
-        }
-    }
-    self.photos = array;
     
     // 创建文件夹
     NSArray *genderArray = @[@"男", @"女"];
@@ -151,6 +131,40 @@
         }
     }
     
+    [manager createDirectoryAtPath:[self docOfNamed]
+       withIntermediateDirectories:YES
+                        attributes:nil
+                             error:nil];
+}
+
+// 照片分组（实现效果不佳）
+- (void)groupPhotos {
+    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *photos = [doc stringByAppendingPathComponent:@"photos"];
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    BOOL isExit = [manager fileExistsAtPath:photos isDirectory:&isDirectory];
+    if (!isExit || !isDirectory) {
+        NSLog(@"不存在photos文件夹");
+        return;
+    }
+    
+    NSError *error;
+    NSArray *contents = [manager contentsOfDirectoryAtPath:photos error:&error];
+    if (error) {
+        NSLog(@"读取文件错误：%@", error);
+        return;
+    }
+    
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSString *name in contents) {
+        if ([name hasSuffix:@".jpeg"]) {
+            [array addObject:[photos stringByAppendingFormat:@"/%@", name]];
+        }
+    }
+    self.photos = array;
+    
     // 开始获取
     self.index = -1;
     [self getNextPhoto];
@@ -179,7 +193,7 @@
     } else {
         ageStr = @"90-100";
     }
-    [doc stringByAppendingPathComponent:ageStr];
+    doc = [doc stringByAppendingPathComponent:ageStr];
     return doc;
 }
 
@@ -251,7 +265,7 @@
 
 // 读取execl，给照片命名
 - (NSArray *)readCsv {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"2" ofType:@"csv"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
     NSError *error = nil;
     NSString *content = [NSString stringWithContentsOfFile:path
                                                   encoding:NSUTF8StringEncoding
@@ -277,7 +291,7 @@
     NSArray *a = [array objectOrNilAtIndex:0];
     if (a) {
         serial = [a indexOfObject:@"序号"];
-        name = [a indexOfObject:@"名字"];
+        name = [a indexOfObject:@"姓名"];
         gender = [a indexOfObject:@"性别"];
         address = [a indexOfObject:@"个人地址"];
         cid = [a indexOfObject:@"证件号码"];
@@ -329,6 +343,7 @@
 - (void)renamePhotoWithUser:(NSArray *)userInfo {
     NSString *pname = [self nameOfPhoto:userInfo];
     if ([self isNamed:pname]) {
+//        NSLog(@"%@-%@ 图片已命名", userInfo[0], userInfo[1]);
         return;
     }
     
@@ -337,20 +352,41 @@
     NSString *gender = userInfo[2];
     
     NSDate *now = [NSDate date];
-    NSInteger age = [userInfo[4] intValue] - now.year;
+    NSInteger age = now.year - [userInfo[4] intValue];
     
-    // 待查找文件夹
-    NSString *doc = [self docOfGender:gender andAge:age];
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *doc;
+    NSString *path;
+    
+    while (age > 0) {
+        // 待查找文件夹
+        doc = [self docOfGender:gender andAge:age];
+        NSArray *contents = [manager contentsOfDirectoryAtPath:doc error:nil];
+        if (contents.count > 0) {
+            path = [doc stringByAppendingFormat:@"/%@", contents[0]];
+            break;
+        }
+        
+        age -= 10;
+    }
+    
+    if (age <= 0) {
+        age = now.year - [userInfo[4] intValue];
+        NSLog(@"%@-%@ %@ 年龄：%ld 找不到相应年龄图片", serial, name, gender, age);
+        return;
+    }
     
     // 存放新命名的路径
     NSString *toPath = [[self docOfNamed] stringByAppendingFormat:@"/%@", pname];
+    
+    [self movePhotoAtPath:path toPath:toPath];
     
 }
 
 - (NSString *)nameOfPhoto:(NSArray *)userInfo {
     NSString *serial = userInfo[0];
-    NSString *name = userInfo[1];
-    return [NSString stringWithFormat:@"%@-%@.png", serial, name];
+//    NSString *name = userInfo[1];
+    return [NSString stringWithFormat:@"%@.jpeg", serial];
 }
 
 - (BOOL)isNamed:(NSString *)pname {
