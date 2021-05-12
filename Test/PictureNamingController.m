@@ -27,11 +27,14 @@
 #import "PictureNamingController.h"
 
 #import "JQUploadPicRequest.h"
+#import <AFNetworking/AFNetworking.h>
 
 @interface PictureNamingController ()
 
 @property (nonatomic, copy) NSArray *photos;
 @property (nonatomic, assign) NSInteger index;
+
+@property (nonatomic, copy) NSString *accessToken;
 
 @end
 
@@ -55,10 +58,28 @@
     NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
 //    [self groupPhotos];
     
-    NSArray *users = [self readCsv];
-    for (NSArray *info in users) {
-        [self renamePhotoWithUser:info];
-    }
+    self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
+    [self renamePhotos];
+    
+//    NSArray *users = [self readCsv];
+//    for (NSArray *info in users) {
+//        [self findAndRenamePhotoWithUser:info];
+//    }
+    
+//    [self getAccessToken:^(NSString *token) {
+//        NSLog(@"token : %@", token);
+//    }];
+    
+    /*
+    self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"1501" ofType:@"png"];
+    [self getAge2:path success:^(NSString *age, NSString *gender) {
+        NSLog(@"年龄：%@， 性别：%@", age, gender);
+    } failure:^{
+        NSLog(@"获取年龄失败");
+    }];
+     */
 }
 
 #pragma mark - Notification
@@ -330,7 +351,7 @@
     return users;
 }
     
-- (void)renamePhotoWithUser:(NSArray *)userInfo {
+- (void)findAndRenamePhotoWithUser:(NSArray *)userInfo {
     NSString *pname = [self nameOfPhoto:userInfo];
     if ([self isNamed:pname]) {
 //        NSLog(@"%@-%@ 图片已命名", userInfo[0], userInfo[1]);
@@ -391,6 +412,131 @@
     NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *named = [doc stringByAppendingPathComponent:@"named"];
     return named;
+}
+
+#pragma mark - 获取年龄
+
+- (void)getAccessToken:(void (^)(NSString *token))block {
+//https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=Va5yQRHlA4Fq5eR3LT0vuXV4&client_secret=0rDSjzQ20XUj5itV6WRtznPQSzr5pVw2&
+
+    AFHTTPSessionManager *Manager = [AFHTTPSessionManager manager];
+    NSString *url = @"https://aip.baidubce.com/oauth/2.0/token";
+    NSDictionary *dict = @{
+        @"grant_type": @"client_credentials",
+        @"client_id": @"CTM8LPtcwObaeAgR78xSG3Dl",
+        @"client_secret": @"qkIhKkTvb6LSjZ29qR7c09gSVsGIzlxY",
+    };
+    //post 请求
+    [Manager POST:url parameters:dict headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString *accessToken = responseObject[@"access_token"];
+        block(accessToken);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"请求失败");
+    }];
+}
+
+- (void)getAge2:(NSString *)photo
+        success:(void (^)(NSString *age, NSString *gender))success
+        failure:(void (^)(void))failure {
+    UIImage *image = [UIImage imageWithContentsOfFile:photo];
+    
+    AFHTTPSessionManager *Manager = [AFHTTPSessionManager manager];
+    NSString *url = @"https://aip.baidubce.com/rest/2.0/face/v3/detect";
+    NSDictionary *dict = @{
+        @"access_token": self.accessToken,
+    };
+    
+    [Manager POST:url parameters:dict headers:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        NSData *data = UIImagePNGRepresentation(image);
+        NSString *base64 = [data base64EncodedStringWithOptions:0];
+        [formData appendPartWithFormData:[base64 dataUsingEncoding:NSUTF8StringEncoding]
+                  name:@"image"];
+        [formData appendPartWithFormData:[@"BASE64" dataUsingEncoding:NSUTF8StringEncoding]
+                  name:@"image_type"];
+        [formData appendPartWithFormData:[@"age,gender" dataUsingEncoding:NSUTF8StringEncoding]
+                  name:@"face_field"];
+    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString *age;
+        NSString *gender;
+        NSArray *array = responseObject[@"result"][@"face_list"];
+        if (array.count > 0) {
+            NSDictionary *dic = array[0];
+            age = dic[@"age"];
+            gender = dic[@"gender"][@"type"];
+            gender = [gender isEqualToString:@"male"] ? @"男" : @"女";
+            success(age, gender);
+        } else {
+            failure();
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"请求失败");
+        failure();
+    }];
+}
+
+#pragma mark - 照片重命名
+
+- (void)renamePhotos {
+    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *photos = [doc stringByAppendingPathComponent:@"photos"];
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    BOOL isExit = [manager fileExistsAtPath:photos isDirectory:&isDirectory];
+    if (!isExit || !isDirectory) {
+        NSLog(@"不存在photos文件夹");
+        return;
+    }
+    
+    NSError *error;
+    NSArray *contents = [manager contentsOfDirectoryAtPath:photos error:&error];
+    if (error) {
+        NSLog(@"读取文件错误：%@", error);
+        return;
+    }
+    
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSString *name in contents) {
+        if ([name hasSuffix:@".png"]) {
+            [array addObject:[photos stringByAppendingFormat:@"/%@", name]];
+        }
+    }
+    self.photos = array;
+    
+    // 开始获取
+    self.index = -1;
+    [self renameNextPhoto];
+}
+
+- (void)renameNextPhoto {
+    self.index++;
+    if (self.index >= self.photos.count) {
+        return;
+    }
+    
+    NSString *photo = self.photos[self.index];
+    [self getAge2:photo success:^(NSString *age, NSString *gender) {
+        [self renamePhoto:photo age:age gender:gender];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self renameNextPhoto];
+        });
+    } failure:^{
+        NSLog(@"获取年龄失败");
+    }];
+}
+
+- (void)renamePhoto:(NSString *)photo age:(NSString *)age gender:(NSString *)gender {
+    NSString *name = photo.lastPathComponent;
+    NSString *extension = photo.pathExtension;
+    NSRange range = [name rangeOfString:[NSString stringWithFormat:@".%@", extension]];
+    NSString *s1 = [name substringWithRange:NSMakeRange(0, range.location)];
+    NSString *newname = [s1 stringByAppendingFormat:@"-%@-%@.png", age, gender];
+    
+    range = [photo rangeOfString:name];
+    NSString *toPath = [photo substringWithRange:NSMakeRange(0, range.location)];
+    toPath = [toPath stringByAppendingString:newname];
+    
+    [self movePhotoAtPath:photo toPath:toPath];
 }
 
 @end
