@@ -36,9 +36,6 @@
 
 @interface FacematchController ()
 
-@property (nonatomic, strong) UIImageView *headImageView;
-@property (nonatomic, assign) NSInteger faceIndex;
-
 @property (nonatomic, copy) NSArray *users;
 @property (nonatomic, assign) NSInteger index;
 
@@ -59,7 +56,6 @@
 	self.title = @"";
     self.view.backgroundColor = UIColor.whiteColor;
 
-//    self.faceIndex = 0;
 //    [self initUI];
     
     [self getAddressList];
@@ -80,72 +76,15 @@
 #pragma mark - 初始化UI
 
 - (void)initUI {
-    [self.view addSubview:self.headImageView];
-    [self.headImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.view);
-        make.top.equalTo(self.view).offset(100);
-        make.width.mas_equalTo(100);
-        make.height.mas_equalTo(125);
-    }];
     
-    [self changeFace];
 }
 
 #pragma mark - 懒加载
-
-- (UIImageView *)headImageView {
-    if (!_headImageView) {
-        _headImageView  = ({
-            UIImage *image = [UIImage imageNamed:@""];
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-            imageView;
-        });
-    }
-    return _headImageView;
-}
 
 #pragma mark - 更新UI
 
 - (void)updateUI {
 
-}
-
-- (void)changeFace {
-    self.faceIndex++;
-    if (self.faceIndex > 20) {
-        return;
-    }
-    
-    NSString *path = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%ld", self.faceIndex]
-                                                     ofType:@"png"];
-    UIImage *image = [UIImage imageWithContentsOfFile:path];
-    self.headImageView.image = image;
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:@"mYiEK5EzegjJP1VNg-4FoTHqFhvaZExQ" forKey:@"api_key"];
-    [dict setObject:@"ld2rYGcpwRZdrvX-bsJoz_Fow-KKnCz5" forKey:@"api_secret"];
-//    [dict setObject:@"http://avatar.csdn.net/5/7/E/1_qq_31810357.jpg" forKey:@"image_url"];
-    [dict setObject:@"0" forKey:@"return_landmark"]; // 检测 83个点返回结果,1检测, 0不检测
-    // 根据人脸特征判断出的年龄，性别，微笑、人脸质量等属性
-    [dict setObject:@"gender,age" forKey:@"return_attributes"]; // 检测属性
-    
-    [JQUploadPicRequest requestToUploadImage:image parmete:dict completion:^(NSDictionary * responDic, NSError *error) {
-//        NSLog(@"%@",responDic);
-        if ([responDic[@"faces"] count] != 0) {
-            NSDictionary *dict = ((NSArray *)responDic[@"faces"]).firstObject;
-            NSInteger age = [dict[@"attributes"][@"age"][@"value"] intValue];
-            NSString *gender = dict[@"attributes"][@"gender"][@"value"];
-            
-            NSString *string = [NSString stringWithFormat:@"%@ %ld岁", [gender isEqualToString:@"Female"]?@"女":@"男", age];
-            [SVProgressHUD showSuccessWithStatus:string];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self changeFace];
-            });
-        } else {
-            NSLog(@"错误返回");
-        }
-    }];
 }
 
 #pragma mark - Setter
@@ -405,7 +344,7 @@
                                        format:@"yyyy.MM.dd"];
     
     NSDate *now = NSDate.now;
-    
+    NSDate *minEnd = [now dateByAddingMonths:8];
     
     NSDate *start = [birthday dateByAddingYears:age];
     NSDate *end;
@@ -421,7 +360,7 @@
             end = [self endOfValid:start birthday:birthday];
         }
         
-        if (end && [end timeIntervalSinceNow] < 0) {
+        if (end && [end timeIntervalSinceDate:minEnd] < 0) {
             start = [start dateByAddingYears:1];
         } else {
             break;
