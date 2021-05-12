@@ -83,19 +83,7 @@
 
 }
 
-#pragma mark - Setter
-
-#pragma mark - Delegate
-
-#pragma mark - 事件处理
-
-#pragma mark - 通知处理
-
-#pragma mark - 界面跳转
-
-#pragma mark - API
-
-#pragma mark - 内部方法
+#pragma mark - 创建文件夹
 
 - (void)initDoc {
     NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
@@ -137,7 +125,8 @@
                              error:nil];
 }
 
-// 照片分组（实现效果不佳）
+#pragma mark - 照片分组
+
 - (void)groupPhotos {
     NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSString *photos = [doc stringByAppendingPathComponent:@"photos"];
@@ -168,6 +157,49 @@
     // 开始获取
     self.index = -1;
     [self getNextPhoto];
+}
+
+- (void)getNextPhoto {
+    self.index++;
+    if (self.index >= self.photos.count) {
+        return;
+    }
+    
+    NSString *photo = self.photos[self.index];
+    [self getAge:photo];
+}
+
+- (void)getAge:(NSString *)photo {
+    UIImage *image = [UIImage imageWithContentsOfFile:photo];
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:@"mYiEK5EzegjJP1VNg-4FoTHqFhvaZExQ" forKey:@"api_key"];
+    [dict setObject:@"ld2rYGcpwRZdrvX-bsJoz_Fow-KKnCz5" forKey:@"api_secret"];
+//    [dict setObject:@"http://avatar.csdn.net/5/7/E/1_qq_31810357.jpg" forKey:@"image_url"];
+    [dict setObject:@"0" forKey:@"return_landmark"]; // 检测 83个点返回结果,1检测, 0不检测
+    // 根据人脸特征判断出的年龄，性别，微笑、人脸质量等属性
+    [dict setObject:@"gender,age" forKey:@"return_attributes"]; // 检测属性
+    
+    [JQUploadPicRequest requestToUploadImage:image parmete:dict completion:^(NSDictionary * responDic, NSError *error) {
+        if ([responDic[@"faces"] count] != 0) {
+            NSDictionary *dict = ((NSArray *)responDic[@"faces"]).firstObject;
+            NSInteger age = [dict[@"attributes"][@"age"][@"value"] intValue];
+
+            // 性别判断
+            NSString *gender = dict[@"attributes"][@"gender"][@"value"];
+            NSString *genderStr = [gender isEqualToString:@"Female"] ? @"女" : @"男";
+            
+            NSString *toPath = [self docOfGender:genderStr andAge:age];
+            toPath = [toPath stringByAppendingFormat:@"/%@", [photo lastPathComponent]];
+            [self movePhotoAtPath:photo toPath:toPath];
+        } else {
+            NSLog(@"面部识别返回错误：【%@】", [photo lastPathComponent]);
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self getNextPhoto];
+        });
+    }];
 }
 
 - (NSString *)docOfGender:(NSString *)gender andAge:(NSInteger)age {
@@ -220,50 +252,8 @@
     return isSuccess;
 }
 
-- (void)getNextPhoto {
-    self.index++;
-    if (self.index >= self.photos.count) {
-        return;
-    }
-    
-    NSString *photo = self.photos[self.index];
-    [self getAge:photo];
-}
+#pragma mark - 读取execl，给照片命名
 
-- (void)getAge:(NSString *)photo {
-    UIImage *image = [UIImage imageWithContentsOfFile:photo];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:@"mYiEK5EzegjJP1VNg-4FoTHqFhvaZExQ" forKey:@"api_key"];
-    [dict setObject:@"ld2rYGcpwRZdrvX-bsJoz_Fow-KKnCz5" forKey:@"api_secret"];
-//    [dict setObject:@"http://avatar.csdn.net/5/7/E/1_qq_31810357.jpg" forKey:@"image_url"];
-    [dict setObject:@"0" forKey:@"return_landmark"]; // 检测 83个点返回结果,1检测, 0不检测
-    // 根据人脸特征判断出的年龄，性别，微笑、人脸质量等属性
-    [dict setObject:@"gender,age" forKey:@"return_attributes"]; // 检测属性
-    
-    [JQUploadPicRequest requestToUploadImage:image parmete:dict completion:^(NSDictionary * responDic, NSError *error) {
-        if ([responDic[@"faces"] count] != 0) {
-            NSDictionary *dict = ((NSArray *)responDic[@"faces"]).firstObject;
-            NSInteger age = [dict[@"attributes"][@"age"][@"value"] intValue];
-
-            // 性别判断
-            NSString *gender = dict[@"attributes"][@"gender"][@"value"];
-            NSString *genderStr = [gender isEqualToString:@"Female"] ? @"女" : @"男";
-            
-            NSString *toPath = [self docOfGender:genderStr andAge:age];
-            toPath = [toPath stringByAppendingFormat:@"/%@", [photo lastPathComponent]];
-            [self movePhotoAtPath:photo toPath:toPath];
-        } else {
-            NSLog(@"面部识别返回错误：【%@】", [photo lastPathComponent]);
-        }
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self getNextPhoto];
-        });
-    }];
-}
-
-// 读取execl，给照片命名
 - (NSArray *)readCsv {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
     NSError *error = nil;
