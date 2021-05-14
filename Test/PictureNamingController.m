@@ -53,22 +53,26 @@
 
     [self initUI];
     
+    // 创建文件夹
     [self initDoc];
     
     NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
-//    [self groupPhotos];
     
+    // 获取百度Token
+//    [self getAccessToken:^(NSString *token) {
+//        NSLog(@"token : %@", token);
+//    }];
+    
+    // 重命名、分组图片
     self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
     [self renamePhotos];
     
+    // 根据execl表格查找、命名图片
 //    NSArray *users = [self readCsv];
 //    for (NSArray *info in users) {
 //        [self findAndRenamePhotoWithUser:info];
 //    }
     
-//    [self getAccessToken:^(NSString *token) {
-//        NSLog(@"token : %@", token);
-//    }];
     
     /*
     self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
@@ -82,8 +86,6 @@
      */
 }
 
-#pragma mark - Notification
-
 #pragma mark - 初始化UI
 
 - (void)initUI {
@@ -92,17 +94,7 @@
 
 #pragma mark - 懒加载
 
-#pragma mark - 重建UI
-
-- (void)rebuildUI {
-
-}
-
 #pragma mark - 更新UI
-
-- (void)updateUI {
-
-}
 
 #pragma mark - 创建文件夹
 
@@ -146,82 +138,7 @@
                              error:nil];
 }
 
-#pragma mark - 照片分组
-
-- (void)groupPhotos {
-    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *photos = [doc stringByAppendingPathComponent:@"photos"];
-    
-    NSFileManager *manager = [NSFileManager defaultManager];
-    BOOL isDirectory;
-    BOOL isExit = [manager fileExistsAtPath:photos isDirectory:&isDirectory];
-    if (!isExit || !isDirectory) {
-        NSLog(@"不存在photos文件夹");
-        return;
-    }
-    
-    NSError *error;
-    NSArray *contents = [manager contentsOfDirectoryAtPath:photos error:&error];
-    if (error) {
-        NSLog(@"读取文件错误：%@", error);
-        return;
-    }
-    
-    NSMutableArray *array = [NSMutableArray array];
-    for (NSString *name in contents) {
-        if ([name hasSuffix:@".jpeg"]) {
-            [array addObject:[photos stringByAppendingFormat:@"/%@", name]];
-        }
-    }
-    self.photos = array;
-    
-    // 开始获取
-    self.index = -1;
-    [self getNextPhoto];
-}
-
-- (void)getNextPhoto {
-    self.index++;
-    if (self.index >= self.photos.count) {
-        return;
-    }
-    
-    NSString *photo = self.photos[self.index];
-    [self getAge:photo];
-}
-
-- (void)getAge:(NSString *)photo {
-    UIImage *image = [UIImage imageWithContentsOfFile:photo];
-    
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:@"mYiEK5EzegjJP1VNg-4FoTHqFhvaZExQ" forKey:@"api_key"];
-    [dict setObject:@"ld2rYGcpwRZdrvX-bsJoz_Fow-KKnCz5" forKey:@"api_secret"];
-//    [dict setObject:@"http://avatar.csdn.net/5/7/E/1_qq_31810357.jpg" forKey:@"image_url"];
-    [dict setObject:@"0" forKey:@"return_landmark"]; // 检测 83个点返回结果,1检测, 0不检测
-    // 根据人脸特征判断出的年龄，性别，微笑、人脸质量等属性
-    [dict setObject:@"gender,age" forKey:@"return_attributes"]; // 检测属性
-    
-    [JQUploadPicRequest requestToUploadImage:image parmete:dict completion:^(NSDictionary * responDic, NSError *error) {
-        if ([responDic[@"faces"] count] != 0) {
-            NSDictionary *dict = ((NSArray *)responDic[@"faces"]).firstObject;
-            NSInteger age = [dict[@"attributes"][@"age"][@"value"] intValue];
-
-            // 性别判断
-            NSString *gender = dict[@"attributes"][@"gender"][@"value"];
-            NSString *genderStr = [gender isEqualToString:@"Female"] ? @"女" : @"男";
-            
-            NSString *toPath = [self docOfGender:genderStr andAge:age];
-            toPath = [toPath stringByAppendingFormat:@"/%@", [photo lastPathComponent]];
-            [self movePhotoAtPath:photo toPath:toPath];
-        } else {
-            NSLog(@"面部识别返回错误：【%@】", [photo lastPathComponent]);
-        }
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self getNextPhoto];
-        });
-    }];
-}
+#pragma mark - 获取目录
 
 - (NSString *)docOfGender:(NSString *)gender andAge:(NSInteger)age {
     NSString *doc = [self docOfGender:gender];
@@ -378,6 +295,7 @@
             break;
         }
         
+        NSLog(@"年龄：%ld 找不到相应年龄图片", age);
         age -= 10;
     }
     
@@ -529,12 +447,12 @@
     NSString *name = photo.lastPathComponent;
     NSString *extension = photo.pathExtension;
     NSRange range = [name rangeOfString:[NSString stringWithFormat:@".%@", extension]];
-    NSString *s1 = [name substringWithRange:NSMakeRange(0, range.location)];
-    NSString *newname = [s1 stringByAppendingFormat:@"-%@-%@.png", age, gender];
+    NSString *s1 = [NSString stringWithFormat:@"%ld", self.index]; // [name substringWithRange:NSMakeRange(0, range.location)];
+    NSString *newname = [s1 stringByAppendingFormat:@"-%@-%@.%@", age, gender, extension];
     
     range = [photo rangeOfString:name];
-    NSString *toPath = [photo substringWithRange:NSMakeRange(0, range.location)];
-    toPath = [toPath stringByAppendingString:newname];
+    NSString *toPath = [self docOfGender:gender andAge:age.intValue]; // [photo substringWithRange:NSMakeRange(0, range.location)];
+    toPath = [toPath stringByAppendingFormat:@"/%@", newname];
     
     [self movePhotoAtPath:photo toPath:toPath];
 }
