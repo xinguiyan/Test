@@ -284,7 +284,8 @@
     }
     
     NSArray *user = self.users[self.index];
-    [self getAge:user];
+//    [self getAge:user];
+    [self getAge2:user];
 }
 
 - (void)getAge:(NSArray *)userInfo {
@@ -333,6 +334,60 @@
             [self getNextUser];
         });
     }];
+}
+
+- (void)getAge2:(NSArray *)userInfo {
+    NSString *serial = userInfo[0]; // 用户序号，对应照片名
+    
+    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *path = [doc stringByAppendingPathComponent:@"named"];
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSArray *photos = [manager contentsOfDirectoryAtPath:path error:nil];
+    
+    for (NSString *photo in photos) {
+        NSArray *tmp = [photo componentsSeparatedByString:@"-"];
+        if (tmp.count == 3 && [tmp[0] isEqualToString:serial]) {
+            NSInteger age = [tmp[1] intValue];
+            NSString *time = [self calcDate:userInfo age:age];
+            
+            NSMutableArray *array = [NSMutableArray arrayWithArray:userInfo];
+            [array addObject:time];
+            [array addObject:[NSString stringWithFormat:@"%ld", age]];
+            [self writeToFile:array];
+            
+            // 性别判断
+            NSString *gender = tmp[2];
+            if (![gender hasPrefix:userInfo[2]]) {
+                NSLog(@"%@-%@ : 【%@】 性别有问题", userInfo[0], userInfo[1], userInfo[2]);
+            }
+            
+            [self renamePhoto:[path stringByAppendingPathComponent:photo]];
+            
+            break;
+        }
+    }
+    
+    [self getNextUser];
+}
+
+- (BOOL)renamePhoto:(NSString *)path {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSError *error;
+    
+    NSString *name = path.lastPathComponent;
+    NSArray *array = [name componentsSeparatedByString:@"-"];
+    NSString *nn = [NSString stringWithFormat:@"%@.png", array[0]];
+    
+    NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    dir = [dir stringByAppendingPathComponent:@"out"];
+    NSString *toPath = [dir stringByAppendingPathComponent:nn];
+    
+    BOOL isSuccess = [manager moveItemAtPath:path toPath:toPath error:&error];
+    if (!isSuccess && error) {
+        NSLog(@"移动错误错误：%@", error);
+        return NO;
+    }
+    return isSuccess;
 }
 
 // 计算签发日期
@@ -394,6 +449,7 @@
     NSString *name = [NSString stringWithFormat:@"%@-%@", values[0], values[1]];
     
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    dir = [dir stringByAppendingPathComponent:@"out"];
     NSString *path = [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.txt", name]];
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL isExit = [manager fileExistsAtPath:path];

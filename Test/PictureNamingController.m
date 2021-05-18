@@ -64,14 +64,14 @@
 //    }];
     
     // 重命名、分组图片
-    self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
-    [self renamePhotos];
+//    self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
+//    [self renamePhotos];
     
     // 根据execl表格查找、命名图片
-//    NSArray *users = [self readCsv];
-//    for (NSArray *info in users) {
-//        [self findAndRenamePhotoWithUser:info];
-//    }
+    NSArray *users = [self readCsv];
+    for (NSArray *info in users) {
+        [self findAndRenamePhotoWithUser:info];
+    }
     
     
     /*
@@ -269,15 +269,14 @@
 }
     
 - (void)findAndRenamePhotoWithUser:(NSArray *)userInfo {
-    NSString *pname = [self nameOfPhoto:userInfo];
-    if ([self isNamed:pname]) {
-//        NSLog(@"%@-%@ 图片已命名", userInfo[0], userInfo[1]);
-        return;
-    }
-    
     NSString *serial = userInfo[0];
     NSString *name = userInfo[1];
     NSString *gender = userInfo[2];
+    
+    if ([self isNamed:serial]) {
+//        NSLog(@"%@-%@ 图片已命名", userInfo[0], userInfo[1]);
+        return;
+    }
     
     NSDate *now = [NSDate date];
     NSInteger age = now.year - [userInfo[4] intValue];
@@ -305,25 +304,28 @@
         return;
     }
     
+    // 重命名文件
+    NSString *n = path.lastPathComponent;
+    NSMutableArray *a = [n componentsSeparatedByString:@"-"].mutableCopy;
+    a[0] = serial;
+    NSString *nn = [a componentsJoinedByString:@"-"];
+    
     // 存放新命名的路径
-    NSString *toPath = [[self docOfNamed] stringByAppendingFormat:@"/%@", pname];
-    
+    NSString *toPath = [[self docOfNamed] stringByAppendingFormat:@"/%@", nn];
     [self movePhotoAtPath:path toPath:toPath];
-    
 }
 
-- (NSString *)nameOfPhoto:(NSArray *)userInfo {
-    NSString *serial = userInfo[0];
-//    NSString *name = userInfo[1];
-    return [NSString stringWithFormat:@"%@.jpeg", serial];
-}
-
-- (BOOL)isNamed:(NSString *)pname {
-    NSString *named = [self docOfNamed];
-    
+- (BOOL)isNamed:(NSString *)serial {
     NSFileManager *manager = [NSFileManager defaultManager];
-    NSString *path = [named stringByAppendingFormat:@"/%@", pname];
-    return [manager fileExistsAtPath:path];
+    NSString *path = [self docOfNamed];
+    NSArray *array = [manager contentsOfDirectoryAtPath:path error:nil];
+    for (NSString *name in array) {
+        NSArray *tmp = [name componentsSeparatedByString:@"-"];
+        if (tmp.count > 0 && [tmp[0] isEqualToString:serial]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (NSString *)docOfNamed {
