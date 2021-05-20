@@ -84,6 +84,21 @@
         NSLog(@"获取年龄失败");
     }];
      */
+    
+    
+    /*
+    NSString *doc = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *ggz = [doc stringByAppendingPathComponent:@"GGZ"];
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSArray *contents = [manager contentsOfDirectoryAtPath:ggz error:nil];
+    for (NSString *name in contents) {
+        if (![name containsString:@"公司"]) {
+            NSString *path = [ggz stringByAppendingPathComponent:name];
+            [manager removeItemAtPath:path error:nil];
+        }
+    }
+     */
 }
 
 #pragma mark - 初始化UI
@@ -193,12 +208,12 @@
 #pragma mark - 读取execl，给照片命名
 
 - (NSArray *)readCsv {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"11" ofType:@"csv"];
     NSError *error = nil;
     NSString *content = [NSString stringWithContentsOfFile:path
                                                   encoding:NSUTF8StringEncoding
                                                      error:&error];
-    NSArray *rows = [content componentsSeparatedByString:@"\r\n"];
+    NSArray *rows = [content componentsSeparatedByString:@"\r"];
     
     // 每行内容拆分
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:rows.count];
@@ -417,7 +432,7 @@
     
     NSMutableArray *array = [NSMutableArray array];
     for (NSString *name in contents) {
-        if ([name hasSuffix:@".png"]) {
+        if ([name hasSuffix:@".png"] || [name hasSuffix:@"jpeg"] || [name hasSuffix:@"jpg"]) {
             [array addObject:[photos stringByAppendingFormat:@"/%@", name]];
         }
     }
@@ -431,6 +446,7 @@
 - (void)renameNextPhoto {
     self.index++;
     if (self.index >= self.photos.count) {
+        NSLog(@"结束了");
         return;
     }
     
