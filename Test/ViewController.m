@@ -44,7 +44,8 @@
     
 //    NSArray *companys = [self readCsv];
     NSArray *companys = @[
-    @{@"serial": @"75", @"name": @"西咸新区泾河新城富瑞吉吕会春日用品营销部"},
+    @{@"serial": @"2", @"name": @"上海茁致贸易商行"},
+    @{@"serial": @"94", @"name": @"上海稷富信息技术中心"},
     ];
     for (NSDictionary *dict in companys) {
         NSArray *values = [self getCompanyInfo:dict];
@@ -357,6 +358,10 @@
 
 // 格式化日期
 - (NSString *)formatDate:(NSString *)date {
+    if ([date isEqualToString:@"-"]) {
+        return @"-";
+    }
+    
     NSString *string;
     
     NSArray *array = [date componentsSeparatedByString:@"-"];
@@ -401,6 +406,7 @@
     }
     
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    dir = [dir stringByAppendingPathComponent:@"ZZ"];
     NSString *path = [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.txt", name]];
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL isExit = [manager fileExistsAtPath:path];
