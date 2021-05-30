@@ -44,8 +44,9 @@
     
 //    NSArray *companys = [self readCsv];
     NSArray *companys = @[
-    @{@"serial": @"2", @"name": @"上海茁致贸易商行"},
-    @{@"serial": @"94", @"name": @"上海稷富信息技术中心"},
+    @{@"serial": @"12", @"name": @"四川易法客建筑工程有限责任公司"},
+    @{@"serial": @"13", @"name": @"越智丰安全科技（南京）有限公司"},
+    @{@"serial": @"482", @"name": @"山东严之有物电子商务有限责任公司"},
     ];
     for (NSDictionary *dict in companys) {
         NSArray *values = [self getCompanyInfo:dict];
@@ -153,12 +154,12 @@
         }
     }
     NSMutableArray *companys = [NSMutableArray array];
-    if (column != NSNotFound && serial_column != NSNotFound) {
+    if (column != NSNotFound) {
         for (int i=1; i<array.count; i++) {
             NSArray *a = [array objectOrNilAtIndex:i];
             if (a) {
                 NSString *name = [a objectOrNilAtIndex:column];
-                NSString *serial = [a objectOrNilAtIndex:serial_column];
+                NSString *serial = [NSString stringWithFormat:@"%d", i]; // [a objectOrNilAtIndex:serial_column];
                 if ([name isNotBlank]) {
 //                    [names addObject:name];
                     NSDictionary *dict = @{
@@ -246,6 +247,18 @@
 - (NSArray *)getContentWithHref:(NSString *)href {
     NSURL *url = [NSURL URLWithString:href];
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+    
+    // 截取table
+    NSString *regStr = @"<table class=\"ntable\">[\\s\\S]*统一社会信用代码</td>[\\s\\S]*?</table>";
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regStr
+                                                                           options:0
+                                                                             error:nil];
+    NSRange range = [regex rangeOfFirstMatchInString:content
+                                             options:0
+                                               range:NSMakeRange(0, content.length)];
+    if (range.location != NSNotFound) {
+        content = [content substringWithRange:range];
+    }
     
     NSArray *titles = @[
         @"统一社会信用代码", // 0
