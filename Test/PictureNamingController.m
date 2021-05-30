@@ -64,14 +64,14 @@
 //    }];
     
     // 重命名、分组图片
-//    self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
-//    [self renamePhotos];
+    self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
+    [self renamePhotos];
     
     // 根据execl表格查找、命名图片
-    NSArray *users = [self readCsv];
-    for (NSArray *info in users) {
-        [self findAndRenamePhotoWithUser:info];
-    }
+//    NSArray *users = [self readCsv];
+//    for (NSArray *info in users) {
+//        [self findAndRenamePhotoWithUser:info];
+//    }
     
     
     /*
@@ -208,12 +208,12 @@
 #pragma mark - 读取execl，给照片命名
 
 - (NSArray *)readCsv {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"11" ofType:@"csv"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
     NSError *error = nil;
     NSString *content = [NSString stringWithContentsOfFile:path
                                                   encoding:NSUTF8StringEncoding
                                                      error:&error];
-    NSArray *rows = [content componentsSeparatedByString:@"\r"];
+    NSArray *rows = [content componentsSeparatedByString:@"\r\n"];
     
     // 每行内容拆分
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:rows.count];
@@ -234,13 +234,13 @@
     NSArray *a = [array objectOrNilAtIndex:0];
     if (a) {
         serial = [a indexOfObject:@"序号"];
-        name = [a indexOfObject:@"姓名"];
+        name = [a indexOfObject:@"名字"];
         gender = [a indexOfObject:@"性别"];
         address = [a indexOfObject:@"个人地址"];
         cid = [a indexOfObject:@"证件号码"];
     }
     
-    if (serial == NSNotFound || name == NSNotFound || gender == NSNotFound ||
+    if (name == NSNotFound || gender == NSNotFound ||
         address == NSNotFound || cid == NSNotFound) {
         NSLog(@"表格缺少指定列名");
         return nil;
@@ -250,7 +250,7 @@
     for (int i=1; i<array.count; i++) {
         NSArray *a = [array objectOrNilAtIndex:i];
         if (a) {
-            NSString *s1 = [a objectOrNilAtIndex:serial];
+            NSString *s1 = [NSString stringWithFormat:@"%d", i]; // [a objectOrNilAtIndex:serial];
             NSString *s2 = [a objectOrNilAtIndex:name];
             if ([s1 isNotBlank] && [s2 isNotBlank]) {
                 NSString *s3 = [a objectOrNilAtIndex:cid];
@@ -270,7 +270,7 @@
                 }
                 
                 NSArray *values = @[
-                    [a objectOrNilAtIndex:serial],
+                    s1,
                     [a objectOrNilAtIndex:name],
                     [a objectOrNilAtIndex:gender],
                     [a objectOrNilAtIndex:cid],
@@ -393,13 +393,18 @@
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *age;
         NSString *gender;
-        NSArray *array = responseObject[@"result"][@"face_list"];
-        if (array.count > 0) {
-            NSDictionary *dic = array[0];
-            age = dic[@"age"];
-            gender = dic[@"gender"][@"type"];
-            gender = [gender isEqualToString:@"male"] ? @"男" : @"女";
-            success(age, gender);
+        NSDictionary *result = responseObject[@"result"];
+        if (result && [result isKindOfClass:NSDictionary.class]) {
+            NSArray *array = result[@"face_list"];
+            if (array && array.count > 0) {
+                NSDictionary *dic = array[0];
+                age = dic[@"age"];
+                gender = dic[@"gender"][@"type"];
+                gender = [gender isEqualToString:@"male"] ? @"男" : @"女";
+                success(age, gender);
+            } else {
+                failure();
+            }
         } else {
             failure();
         }
@@ -432,7 +437,10 @@
     
     NSMutableArray *array = [NSMutableArray array];
     for (NSString *name in contents) {
-        if ([name hasSuffix:@".png"] || [name hasSuffix:@"jpeg"] || [name hasSuffix:@"jpg"]) {
+        if ([name hasSuffix:@".png"] ||
+            [name hasSuffix:@".jpeg"] ||
+            [name hasSuffix:@".jpg"] ||
+            [name hasSuffix:@".bmp"]) {
             [array addObject:[photos stringByAppendingFormat:@"/%@", name]];
         }
     }
@@ -458,6 +466,7 @@
         });
     } failure:^{
         NSLog(@"获取年龄失败");
+        [self renameNextPhoto];
     }];
 }
 
