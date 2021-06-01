@@ -128,13 +128,13 @@
     NSArray *a = [array objectOrNilAtIndex:0];
     if (a) {
         serial = [a indexOfObject:@"序号"];
-        name = [a indexOfObject:@"姓名"];
+        name = [a indexOfObject:@"名字"];
         gender = [a indexOfObject:@"性别"];
         address = [a indexOfObject:@"个人地址"];
         cid = [a indexOfObject:@"证件号码"];
     }
     
-    if (serial == NSNotFound || name == NSNotFound || gender == NSNotFound ||
+    if (name == NSNotFound || gender == NSNotFound ||
         address == NSNotFound || cid == NSNotFound) {
         NSLog(@"表格缺少指定列名");
         return nil;
@@ -144,7 +144,7 @@
     for (int i=1; i<array.count; i++) {
         NSArray *a = [array objectOrNilAtIndex:i];
         if (a) {
-            NSString *s1 = [a objectOrNilAtIndex:serial];
+            NSString *s1 = [NSString stringWithFormat:@"%d", i]; // [a objectOrNilAtIndex:serial];
             NSString *s2 = [a objectOrNilAtIndex:name];
             if ([s1 isNotBlank] && [s2 isNotBlank]) {
                 NSString *s3 = [a objectOrNilAtIndex:cid];
@@ -182,7 +182,7 @@
                 }
                 
                 NSArray *values = @[
-                    [a objectOrNilAtIndex:serial],
+                    s1,
                     [a objectOrNilAtIndex:name],
                     [a objectOrNilAtIndex:gender],
                     [a objectOrNilAtIndex:address],
