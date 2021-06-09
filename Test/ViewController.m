@@ -44,9 +44,7 @@
     
 //    NSArray *companys = [self readCsv];
     NSArray *companys = @[
-    @{@"serial": @"12", @"name": @"四川易法客建筑工程有限责任公司"},
-    @{@"serial": @"13", @"name": @"越智丰安全科技（南京）有限公司"},
-    @{@"serial": @"482", @"name": @"山东严之有物电子商务有限责任公司"},
+    @{@"serial": @"97", @"name": @"山西锦晟鼎建筑工程有限公司"},
     ];
     for (NSDictionary *dict in companys) {
         NSArray *values = [self getCompanyInfo:dict];
@@ -420,8 +418,14 @@
     
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     dir = [dir stringByAppendingPathComponent:@"ZZ"];
-    NSString *path = [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.txt", name]];
+    
     NSFileManager *manager = [NSFileManager defaultManager];
+    [manager createDirectoryAtPath:dir
+       withIntermediateDirectories:YES
+                        attributes:nil
+                             error:nil];
+    
+    NSString *path = [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.txt", name]];
     BOOL isExit = [manager fileExistsAtPath:path];
     if (!isExit) {
         [manager createFileAtPath:path contents:nil attributes:nil];
