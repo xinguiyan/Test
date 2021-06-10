@@ -481,6 +481,16 @@
     NSString *toPath = [self docOfGender:gender andAge:age.intValue]; // [photo substringWithRange:NSMakeRange(0, range.location)];
     toPath = [toPath stringByAppendingFormat:@"/%@", newname];
     
+    NSInteger i = self.index;
+    NSFileManager *manager = [NSFileManager defaultManager];
+    while ([manager fileExistsAtPath:toPath]) {
+        i++;
+        newname = [NSString stringWithFormat:@"%ld-%@-%@.%@", i, age, gender, extension];
+        
+        toPath = [self docOfGender:gender andAge:age.intValue];
+        toPath = [toPath stringByAppendingFormat:@"/%@", newname];
+    }
+    
     [self movePhotoAtPath:photo toPath:toPath];
 }
 
