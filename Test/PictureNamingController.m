@@ -64,7 +64,7 @@
 //    }];
     
     // 重命名、分组图片
-    self.accessToken = @"24.4dc46f15630edeba419d891c98151b74.2592000.1623395213.282335-24151218";
+    self.accessToken = @"24.35c12d4608cdd6fac1f3b38ab0732ac4.2592000.1626785212.282335-24151218";
     [self renamePhotos];
     
     // 根据execl表格查找、命名图片
