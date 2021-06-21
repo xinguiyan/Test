@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		590F7C40C8BAE71A9780E40D /* Pods_Test.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F4C433743BD5833F3737EC9 /* Pods_Test.framework */; };
 		BD4AFAC02648DB2D0049222C /* PictureNamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4AFABF2648DB2D0049222C /* PictureNamingController.m */; };
+		BD60585C268026F5004998F4 /* TianyanchaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD60585B268026F5004998F4 /* TianyanchaManager.m */; };
+		BD60585F268029C8004998F4 /* QccManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD60585E268029C8004998F4 /* QccManager.m */; };
+		BD60586226802FFF004998F4 /* AiqichaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD60586126802FFF004998F4 /* AiqichaManager.m */; };
+		BD60586526803AF0004998F4 /* LocalQccManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD60586426803AF0004998F4 /* LocalQccManager.m */; };
 		BD856FBE2647CC7600E17909 /* 2.csv in Resources */ = {isa = PBXBuildFile; fileRef = BD856FBD2647CC7600E17909 /* 2.csv */; };
 		BD856FC22647F69300E17909 /* BRCity.json in Resources */ = {isa = PBXBuildFile; fileRef = BD856FC12647F69300E17909 /* BRCity.json */; };
 		BD856FC72647F7F300E17909 /* BRAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BD856FC62647F7F300E17909 /* BRAddressModel.m */; };
@@ -36,6 +40,14 @@
 		A6A42332C79C7C099CB45AB2 /* Pods-Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Test.release.xcconfig"; path = "Target Support Files/Pods-Test/Pods-Test.release.xcconfig"; sourceTree = "<group>"; };
 		BD4AFABE2648DB2C0049222C /* PictureNamingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PictureNamingController.h; sourceTree = "<group>"; };
 		BD4AFABF2648DB2D0049222C /* PictureNamingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PictureNamingController.m; sourceTree = "<group>"; };
+		BD60585A268026F5004998F4 /* TianyanchaManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TianyanchaManager.h; sourceTree = "<group>"; };
+		BD60585B268026F5004998F4 /* TianyanchaManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TianyanchaManager.m; sourceTree = "<group>"; };
+		BD60585D268029C8004998F4 /* QccManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QccManager.h; sourceTree = "<group>"; };
+		BD60585E268029C8004998F4 /* QccManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QccManager.m; sourceTree = "<group>"; };
+		BD60586026802FFF004998F4 /* AiqichaManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AiqichaManager.h; sourceTree = "<group>"; };
+		BD60586126802FFF004998F4 /* AiqichaManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AiqichaManager.m; sourceTree = "<group>"; };
+		BD60586326803AF0004998F4 /* LocalQccManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocalQccManager.h; sourceTree = "<group>"; };
+		BD60586426803AF0004998F4 /* LocalQccManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalQccManager.m; sourceTree = "<group>"; };
 		BD6BDD572645182B00C67FE1 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		BD856FBD2647CC7600E17909 /* 2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2.csv; sourceTree = "<group>"; };
 		BD856FC12647F69300E17909 /* BRCity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BRCity.json; sourceTree = "<group>"; };
@@ -97,6 +109,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BD6058592680261F004998F4 /* manager */ = {
+			isa = PBXGroup;
+			children = (
+				BD60586026802FFF004998F4 /* AiqichaManager.h */,
+				BD60586126802FFF004998F4 /* AiqichaManager.m */,
+				BD60585D268029C8004998F4 /* QccManager.h */,
+				BD60585E268029C8004998F4 /* QccManager.m */,
+				BD60585A268026F5004998F4 /* TianyanchaManager.h */,
+				BD60585B268026F5004998F4 /* TianyanchaManager.m */,
+				BD60586326803AF0004998F4 /* LocalQccManager.h */,
+				BD60586426803AF0004998F4 /* LocalQccManager.m */,
+			);
+			path = manager;
+			sourceTree = "<group>";
+		};
 		BD6BDBC626450CEA00C67FE1 /* photos */ = {
 			isa = PBXGroup;
 			children = (
@@ -156,6 +183,7 @@
 		BDFA6E6325A34004005C59CF /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				BD6058592680261F004998F4 /* manager */,
 				BDDAE1F3263E93E900457C9D /* 1.csv */,
 				BD856FBD2647CC7600E17909 /* 2.csv */,
 				BDFA6E6425A34004005C59CF /* AppDelegate.h */,
@@ -316,13 +344,17 @@
 			files = (
 				BDDAE2DB26427A7A00457C9D /* JQUploadPicRequest.m in Sources */,
 				BDFA6E6C25A34004005C59CF /* ViewController.m in Sources */,
+				BD60586226802FFF004998F4 /* AiqichaManager.m in Sources */,
 				BDA23FCF2625D405000B3B8B /* WebViewController.m in Sources */,
+				BD60586526803AF0004998F4 /* LocalQccManager.m in Sources */,
 				BDDAE20626423F6000457C9D /* FacematchController.m in Sources */,
 				BDFA6E6625A34004005C59CF /* AppDelegate.m in Sources */,
 				BDFA6E7725A34006005C59CF /* main.m in Sources */,
 				BD4AFAC02648DB2D0049222C /* PictureNamingController.m in Sources */,
+				BD60585F268029C8004998F4 /* QccManager.m in Sources */,
 				BD856FC72647F7F300E17909 /* BRAddressModel.m in Sources */,
 				BDDAE2D926427A7A00457C9D /* UIImage+GCAdd.m in Sources */,
+				BD60585C268026F5004998F4 /* TianyanchaManager.m in Sources */,
 				BDDAE2DA26427A7A00457C9D /* JQResulltViewController.m in Sources */,
 				BDDAE3142642DB7900457C9D /* MMLocationParser.m in Sources */,
 				BDA23FD62625D705000B3B8B /* URLSchemeHandler.m in Sources */,
