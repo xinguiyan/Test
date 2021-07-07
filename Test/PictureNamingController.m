@@ -64,7 +64,7 @@
 //    }];
     
     // 重命名、分组图片
-    self.accessToken = @"24.35c12d4608cdd6fac1f3b38ab0732ac4.2592000.1626785212.282335-24151218";
+    self.accessToken = @"24.48ec60806fae591074708a6434627351.2592000.1628250293.282335-24151218";
     [self renamePhotos];
     
     // 根据execl表格查找、命名图片
@@ -373,6 +373,7 @@
 - (void)getAge2:(NSString *)photo
         success:(void (^)(NSString *age, NSString *gender))success
         failure:(void (^)(void))failure {
+    
     UIImage *image = [UIImage imageWithContentsOfFile:photo];
     
     AFHTTPSessionManager *Manager = [AFHTTPSessionManager manager];
@@ -412,6 +413,20 @@
         NSLog(@"请求失败");
         failure();
     }];
+    
+    /*
+    NSString *name = photo.lastPathComponent;
+    NSString *extension = photo.pathExtension;
+    NSRange range = [name rangeOfString:[NSString stringWithFormat:@".%@", extension]];
+    name = [name substringWithRange:NSMakeRange(0, range.location)];
+    
+    NSArray *array = [name componentsSeparatedByString:@"-"];
+    if (array.count == 3) {
+        success(array[1], array[2]);
+    } else {
+        failure();
+    }
+     */
 }
 
 #pragma mark - 照片重命名
