@@ -305,7 +305,8 @@
         doc = [self docOfGender:gender andAge:age];
         NSArray *contents = [manager contentsOfDirectoryAtPath:doc error:nil];
         if (contents.count > 0) {
-            path = [doc stringByAppendingFormat:@"/%@", contents[0]];
+            NSInteger index = arc4random_uniform((unsigned int)contents.count);
+            path = [doc stringByAppendingFormat:@"/%@", contents[index]];
             break;
         }
         
