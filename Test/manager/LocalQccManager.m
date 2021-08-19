@@ -112,7 +112,7 @@
     ];
     NSMutableArray *values = [NSMutableArray array];
     for (NSString *title in titles) {
-        NSString *regStr = [NSString stringWithFormat:@"<td[^>]*>[^<]*%@[^<]*</td> <td[^>]*>[\\s\\S]*?</td>", title];
+        NSString *regStr = [NSString stringWithFormat:@"<td[^>]*>[^<]*%@[\\s\\S]*?</td> <td[^>]*>[\\s\\S]*?</td>", title];
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regStr
                                                                                options:0
                                                                                  error:nil];
