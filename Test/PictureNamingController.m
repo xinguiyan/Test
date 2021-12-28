@@ -64,14 +64,14 @@
 //    }];
     
     // 重命名、分组图片
-    self.accessToken = @"24.c1432bb1fe04afcb0c868c7ed88b0297.2592000.1643262924.282335-24151218";
-    [self renamePhotos];
+//    self.accessToken = @"24.c1432bb1fe04afcb0c868c7ed88b0297.2592000.1643262924.282335-24151218";
+//    [self renamePhotos];
     
     // 根据execl表格查找、命名图片
-//    NSArray *users = [self readCsv];
-//    for (NSArray *info in users) {
-//        [self findAndRenamePhotoWithUser:info];
-//    }
+    NSArray *users = [self readCsv];
+    for (NSArray *info in users) {
+        [self findAndRenamePhotoWithUser:info];
+    }
     
     
     /*
@@ -234,10 +234,10 @@
     NSArray *a = [array objectOrNilAtIndex:0];
     if (a) {
         serial = [a indexOfObject:@"序号"];
-        name = [a indexOfObject:@"名字"];
+        name = [a indexOfObject:@"姓名"];
         gender = [a indexOfObject:@"性别"];
-        address = [a indexOfObject:@"个人地址"];
-        cid = [a indexOfObject:@"证件号码"];
+        address = [a indexOfObject:@"地址"];
+        cid = [a indexOfObject:@"号码"];
     }
     
     if (name == NSNotFound || gender == NSNotFound ||
