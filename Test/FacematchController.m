@@ -128,10 +128,10 @@
     NSArray *a = [array objectOrNilAtIndex:0];
     if (a) {
         serial = [a indexOfObject:@"序号"];
-        name = [a indexOfObject:@"名字"];
+        name = [a indexOfObject:@"姓名"];
         gender = [a indexOfObject:@"性别"];
-        address = [a indexOfObject:@"个人地址"];
-        cid = [a indexOfObject:@"证件号码"];
+        address = [a indexOfObject:@"地址"];
+        cid = [a indexOfObject:@"号码"];
     }
     
     if (name == NSNotFound || gender == NSNotFound ||
