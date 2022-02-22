@@ -52,7 +52,8 @@
     
     NSArray *companys = [self readCsv];
 //    NSArray *companys = @[
-//    @{@"serial": @"97", @"name": @"山西锦晟鼎建筑工程有限公司"},
+//    @{@"serial": @"76", @"name": @"鄂尔多斯市臻熙佑钰商贸有限公司"},
+//    @{@"serial": @"91", @"name": @"天津市滨海新区恒泽商贸有限公司"},
 //    ];
     for (NSDictionary *dict in companys) {
         NSArray *values = [self getCompanyInfo:dict];
@@ -324,12 +325,70 @@
     [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
     
     // 二维码保存
-    NSString *url = [NSString stringWithFormat:@"https://www.chitus.com/ewm/create?config=%%7B%%22content%%22%%3A%%22http%%3A%%2F%%2Fwww.gsxt.gov.cn%%2Findex.html%%3Funiscid%%3D%@%%22%%7D", array[0]];
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-    UIImage *image=[UIImage imageWithData:data];
+//    NSString *url = [NSString stringWithFormat:@"https://www.chitus.com/ewm/createPc?config=%%7B%%22content%%22%%3A%%22http%%3A%%2F%%2Fwww.gsxt.gov.cn%%2Findex.html%%3Funiscid%%3D%@%%22%%7D&amp;auto_title=&amp;k=88859024993250", array[0]];
+//    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+//    UIImage *image=[UIImage imageWithData:data];
+    NSString *url = [NSString stringWithFormat:@"http://www.gsxt.gov.cn/index.html?uniscid=%@", array[0]];
+    UIImage *image = [self createQRCodeWithURL:url];
     
     path = [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_qc.png", name]];
     [UIImagePNGRepresentation(image) writeToFile:path atomically:YES];
+}
+
+// 生成二维码
+- (UIImage *)createQRCodeWithURL:(NSString *)URL {
+    // 1.创建一个二维码滤镜实例
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [filter setDefaults];
+    
+    // 2.给滤镜添加数据
+    NSString *targetStr = URL;
+    NSData *targetData = [targetStr dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+    [filter setValue:targetData forKey:@"inputMessage"];
+    
+    // 3.生成二维码
+    CIImage *image = [filter outputImage];
+    
+    // 4.高清处理: size 要大于等于视图显示的尺寸
+    UIImage *img = [self createNonInterpolatedUIImageFromCIImage:image size:[UIScreen mainScreen].bounds.size.width];
+    
+    //5.嵌入LOGO
+    //5.1开启图形上下文
+    UIGraphicsBeginImageContext(img.size);
+    //5.2将二维码的LOGO画入
+    [img drawInRect:CGRectMake(0, 0, img.size.width, img.size.height)];
+    
+    //5.3获取绘制好的图片
+    UIImage *finalImg=UIGraphicsGetImageFromCurrentImageContext();
+    //5.4关闭图像上下文
+    UIGraphicsEndImageContext();
+
+    //6.生成最终二维码
+    return finalImg;
+}
+
+- (UIImage *)createNonInterpolatedUIImageFromCIImage:(CIImage *)image size:(CGFloat)size {
+    CGRect extent = CGRectIntegral(image.extent);
+    CGFloat scale = MIN(size/CGRectGetWidth(extent), size/CGRectGetHeight(extent));
+    
+    // 1.创建bitmap
+    size_t width = CGRectGetWidth(extent)*scale;
+    size_t height = CGRectGetHeight(extent)*scale;
+    
+    CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
+    CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
+    CIContext *context = [CIContext contextWithOptions:nil];
+    CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
+    CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
+    CGContextScaleCTM(bitmapRef, scale, scale);
+    CGContextDrawImage(bitmapRef, extent, bitmapImage);
+    
+    //2.保存bitmap到图片
+    CGImageRef scaledImage = CGBitmapContextCreateImage(bitmapRef);
+    CGContextRelease(bitmapRef);
+    CGImageRelease(bitmapImage);
+    
+    return [UIImage imageWithCGImage:scaledImage];
 }
 
 @end
