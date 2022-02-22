@@ -55,13 +55,6 @@
 //    @{@"serial": @"97", @"name": @"山西锦晟鼎建筑工程有限公司"},
 //    ];
     for (NSDictionary *dict in companys) {
-        
-//        NSInteger serial = [dict[@"serial"] intValue];
-//        if (serial <= 75) {
-//            continue;
-//        }
-        
-        
         NSArray *values = [self getCompanyInfo:dict];
         if (values.count) {
             NSString *name = [NSString stringWithFormat:@"%@-%@", dict[@"serial"], dict[@"name"]];
