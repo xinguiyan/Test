@@ -350,21 +350,9 @@
     CIImage *image = [filter outputImage];
     
     // 4.高清处理: size 要大于等于视图显示的尺寸
-    UIImage *img = [self createNonInterpolatedUIImageFromCIImage:image size:[UIScreen mainScreen].bounds.size.width];
+    UIImage *img = [self createNonInterpolatedUIImageFromCIImage:image size:440];
     
-    //5.嵌入LOGO
-    //5.1开启图形上下文
-    UIGraphicsBeginImageContext(img.size);
-    //5.2将二维码的LOGO画入
-    [img drawInRect:CGRectMake(0, 0, img.size.width, img.size.height)];
-    
-    //5.3获取绘制好的图片
-    UIImage *finalImg=UIGraphicsGetImageFromCurrentImageContext();
-    //5.4关闭图像上下文
-    UIGraphicsEndImageContext();
-
-    //6.生成最终二维码
-    return finalImg;
+    return img;
 }
 
 - (UIImage *)createNonInterpolatedUIImageFromCIImage:(CIImage *)image size:(CGFloat)size {
