@@ -124,7 +124,11 @@
             NSArray *array = [substring componentsSeparatedByString:@"/td>"];
             NSString *td = array[1];
             NSString *content;
-            if ([title isEqualToString:@"法定代表人"]) {
+            if ([title isEqualToString:@"统一社会信用代码"]) {
+                content = [self contentOfFirstSpan:td];
+            } else if ([title isEqualToString:@"企业名称"]) {
+                content = [self contentOfFirstSpan:td];
+            } else if ([title isEqualToString:@"法定代表人"]) {
                 content = [self contentOfRepresentative:td];
             } else if ([title isEqualToString:@"注册地址"]) {
                 content = [self contentOfRegisteredAddress:td];
@@ -139,6 +143,39 @@
     }
     
     return values;
+}
+
+// 查找第一个span内容（统一社会信用代码、企业名称 使用）
++ (NSString *)contentOfFirstSpan:(NSString *)td {
+    NSString *content;
+    
+    NSString *regStr = [NSString stringWithFormat:@"<span[^>]*>[^<]*?</span>"];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regStr
+                                                                           options:0
+                                                                             error:nil];
+    NSRange range = [regex rangeOfFirstMatchInString:td
+                                             options:0
+                                               range:NSMakeRange(0, td.length)];
+    if (range.location != NSNotFound) {
+        content = [td substringWithRange:range];
+        // <span class="copy-value" data-v-376d6b66>91420200MA49KFYC70</span>
+        
+        regStr = [NSString stringWithFormat:@">[^<]*</span>"];
+        regex = [NSRegularExpression regularExpressionWithPattern:regStr
+                                                          options:0
+                                                            error:nil];
+        range = [regex rangeOfFirstMatchInString:content
+                                         options:0
+                                           range:NSMakeRange(0, content.length)];
+        
+        if (range.location != NSNotFound) {
+            range.location += 1;
+            range.length -= 8;
+            content = [content substringWithRange:range];
+        }
+    }
+    
+    return [content stringByTrim];
 }
 
 // 法定代表人
