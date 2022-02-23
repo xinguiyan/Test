@@ -147,7 +147,7 @@
             NSString *s1 = [NSString stringWithFormat:@"%d", i]; // [a objectOrNilAtIndex:serial];
             NSString *s2 = [a objectOrNilAtIndex:name];
             if ([s1 isNotBlank] && [s2 isNotBlank]) {
-                NSString *s3 = [a objectOrNilAtIndex:cid];
+                NSString *s3 = [[a objectOrNilAtIndex:cid] stringByTrim];
                 if (s3.length != 18) {
                     NSLog(@"%@-%@ : 【%@】 身份证有问题", s1, s2, s3);
                     continue;
