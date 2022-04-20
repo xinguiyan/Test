@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "FacematchController.h"
 #import "PictureNamingController.h"
+#import "ImageTransController.h"
 
 @interface AppDelegate ()
 
@@ -22,9 +23,12 @@
     
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     
-    ViewController *vc = [[ViewController alloc] init];
+//    ViewController *vc = [[ViewController alloc] init];
 //    FacematchController *vc = [[FacematchController alloc] init];
 //    PictureNamingController *vc = [[PictureNamingController alloc] init];
+    
+    // 图片转换
+    ImageTransController *vc = [[ImageTransController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nav;

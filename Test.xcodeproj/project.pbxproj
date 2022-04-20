@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		590F7C40C8BAE71A9780E40D /* Pods_Test.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F4C433743BD5833F3737EC9 /* Pods_Test.framework */; };
+		141CE49D2810342200D7C6FC /* 123.png in Resources */ = {isa = PBXBuildFile; fileRef = 141CE49C2810342200D7C6FC /* 123.png */; };
+		141D87D128102C94002DDBAF /* ImageTransController.m in Sources */ = {isa = PBXBuildFile; fileRef = 141D87D028102C94002DDBAF /* ImageTransController.m */; };
+		571328A88C9E2BAAC4EA9307 /* Pods_Test.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6B3ACC020E76CA94C6C320 /* Pods_Test.framework */; };
 		BD4AFAC02648DB2D0049222C /* PictureNamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4AFABF2648DB2D0049222C /* PictureNamingController.m */; };
 		BD60585C268026F5004998F4 /* TianyanchaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD60585B268026F5004998F4 /* TianyanchaManager.m */; };
 		BD60585F268029C8004998F4 /* QccManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD60585E268029C8004998F4 /* QccManager.m */; };
@@ -36,7 +38,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1F4C433743BD5833F3737EC9 /* Pods_Test.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Test.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		141CE49C2810342200D7C6FC /* 123.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 123.png; sourceTree = "<group>"; };
+		141D87CF28102C94002DDBAF /* ImageTransController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageTransController.h; sourceTree = "<group>"; };
+		141D87D028102C94002DDBAF /* ImageTransController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageTransController.m; sourceTree = "<group>"; };
+		147772E72779FEAC0023826F /* libAFNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAFNetworking.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E6B3ACC020E76CA94C6C320 /* Pods_Test.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Test.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6A42332C79C7C099CB45AB2 /* Pods-Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Test.release.xcconfig"; path = "Target Support Files/Pods-Test/Pods-Test.release.xcconfig"; sourceTree = "<group>"; };
 		BD4AFABE2648DB2C0049222C /* PictureNamingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PictureNamingController.h; sourceTree = "<group>"; };
 		BD4AFABF2648DB2D0049222C /* PictureNamingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PictureNamingController.m; sourceTree = "<group>"; };
@@ -93,18 +99,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDA23FD92625DE75000B3B8B /* MobileCoreServices.framework in Frameworks */,
-				590F7C40C8BAE71A9780E40D /* Pods_Test.framework in Frameworks */,
+				571328A88C9E2BAAC4EA9307 /* Pods_Test.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		141D87CE28102C7C002DDBAF /* image */ = {
+			isa = PBXGroup;
+			children = (
+				141D87CF28102C94002DDBAF /* ImageTransController.h */,
+				141D87D028102C94002DDBAF /* ImageTransController.m */,
+			);
+			path = image;
+			sourceTree = "<group>";
+		};
 		7A51558541255451E4B74393 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				147772E72779FEAC0023826F /* libAFNetworking.a */,
 				BDA23FD82625DE75000B3B8B /* MobileCoreServices.framework */,
-				1F4C433743BD5833F3737EC9 /* Pods_Test.framework */,
+				5E6B3ACC020E76CA94C6C320 /* Pods_Test.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -122,13 +138,6 @@
 				BD60586426803AF0004998F4 /* LocalQccManager.m */,
 			);
 			path = manager;
-			sourceTree = "<group>";
-		};
-		BD6BDBC626450CEA00C67FE1 /* photos */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = photos;
 			sourceTree = "<group>";
 		};
 		BD856FC42647F7C800E17909 /* BRAddress */ = {
@@ -183,6 +192,8 @@
 		BDFA6E6325A34004005C59CF /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				141CE49C2810342200D7C6FC /* 123.png */,
+				141D87CE28102C7C002DDBAF /* image */,
 				BD6058592680261F004998F4 /* manager */,
 				BDDAE1F3263E93E900457C9D /* 1.csv */,
 				BD856FBD2647CC7600E17909 /* 2.csv */,
@@ -200,7 +211,6 @@
 				BDDAE3112642DB6B00457C9D /* MMLocationParser */,
 				BDFA6E7F25A340CB005C59CF /* OneController.h */,
 				BDFA6E8025A340CB005C59CF /* OneController.m */,
-				BD6BDBC626450CEA00C67FE1 /* photos */,
 				BD4AFABE2648DB2C0049222C /* PictureNamingController.h */,
 				BD4AFABF2648DB2D0049222C /* PictureNamingController.m */,
 				BD6BDD572645182B00C67FE1 /* PrefixHeader.pch */,
@@ -238,7 +248,7 @@
 				BDFA6E5D25A34004005C59CF /* Sources */,
 				BDFA6E5E25A34004005C59CF /* Frameworks */,
 				BDFA6E5F25A34004005C59CF /* Resources */,
-				F7C5EC0F02CC25A1CC53AAF4 /* [CP] Embed Pods Frameworks */,
+				00C0E31CB0D0B7869C576BB8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -285,6 +295,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				141CE49D2810342200D7C6FC /* 123.png in Resources */,
 				BDDAE1F4263E93E900457C9D /* 1.csv in Resources */,
 				BDFA6E7425A34006005C59CF /* LaunchScreen.storyboard in Resources */,
 				BD856FBE2647CC7600E17909 /* 2.csv in Resources */,
@@ -296,6 +307,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		00C0E31CB0D0B7869C576BB8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Test/Pods-Test-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Test/Pods-Test-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Test/Pods-Test-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		D938B16045D0FD32E326815B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -318,23 +346,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F7C5EC0F02CC25A1CC53AAF4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Test/Pods-Test-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Test/Pods-Test-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Test/Pods-Test-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -342,6 +353,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				141D87D128102C94002DDBAF /* ImageTransController.m in Sources */,
 				BDDAE2DB26427A7A00457C9D /* JQUploadPicRequest.m in Sources */,
 				BDFA6E6C25A34004005C59CF /* ViewController.m in Sources */,
 				BD60586226802FFF004998F4 /* AiqichaManager.m in Sources */,
@@ -497,6 +509,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GCC_PREFIX_HEADER = Test/PrefixHeader.pch;
 				INFOPLIST_FILE = Test/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
