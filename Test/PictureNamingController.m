@@ -363,7 +363,7 @@
         @"client_secret": @"qkIhKkTvb6LSjZ29qR7c09gSVsGIzlxY",
     };
     //post 请求
-    [Manager POST:url parameters:dict headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [Manager POST:url parameters:dict progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *accessToken = responseObject[@"access_token"];
         block(accessToken);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -383,7 +383,7 @@
         @"access_token": self.accessToken,
     };
     
-    [Manager POST:url parameters:dict headers:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    [Manager POST:url parameters:dict constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         NSData *data = UIImagePNGRepresentation(image);
         NSString *base64 = [data base64EncodedStringWithOptions:0];
         [formData appendPartWithFormData:[base64 dataUsingEncoding:NSUTF8StringEncoding]

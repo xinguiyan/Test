@@ -70,7 +70,7 @@
         @"client_secret": @"agTGdrFgOekNngvdCFSv0BwrbQ6A3iaB",
     };
     //post 请求
-    [Manager POST:url parameters:dict headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [Manager POST:url parameters:dict progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSString *accessToken = responseObject[@"access_token"];
         block(accessToken);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -102,19 +102,19 @@
         @"Content-Type": @"application/x-www-form-urlencoded"
     };
     
-    [Manager POST:url parameters:params headers:headers progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSString *image = responseObject[@"image"];
-        if (image) {
-            NSData *data = [[NSData alloc] initWithBase64EncodedString:image options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            UIImage *result = [UIImage imageWithData:data];
-            [self saveImage:result name:@"111.png"];
-        } else {
-            failure();
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"请求失败");
-        failure();
-    }];
+//    [Manager POST:url parameters:params headers:headers progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+//        NSString *image = responseObject[@"image"];
+//        if (image) {
+//            NSData *data = [[NSData alloc] initWithBase64EncodedString:image options:NSDataBase64DecodingIgnoreUnknownCharacters];
+//            UIImage *result = [UIImage imageWithData:data];
+//            [self saveImage:result name:@"111.png"];
+//        } else {
+//            failure();
+//        }
+//    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+//        NSLog(@"请求失败");
+//        failure();
+//    }];
 }
 
 #pragma mark - 保存图片

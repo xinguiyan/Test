@@ -7,7 +7,7 @@ target 'Test' do
 
   # Pods for Test
   pod 'Masonry'
-  pod 'AFNetworking'
+  pod 'AFNetworking', '~> 3.0'
   pod 'YYKit'
   pod "JQHttpRequest"
   pod "SVProgressHUD"
