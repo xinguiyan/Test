@@ -86,7 +86,7 @@
     NSString *content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
     
     // 截取table
-    NSString *regStr = @"<table class=\"ntable\">[\\s\\S]*统一社会信用代码</td>[\\s\\S]*?</table>";
+    NSString *regStr = @"<table class=\"ntable\">[\\s\\S]*统一社会信用代码 [\\s\\S]*?</table>";
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regStr
                                                                            options:0
                                                                              error:nil];
@@ -101,9 +101,9 @@
         @"统一社会信用代码", // 0
         @"企业名称",       // 1
         @"企业类型",       // 2
-        @"注册地址",       // 3
+        @"<span>注册地址",       // 3
         @"法定代表人",     // 4
-        @"注册资本",       // 5
+        @"<span>注册资本",       // 5
         @"成立日期",       // 6
         @"经营范围",       // 7
         @"登记机关",       // 8
@@ -130,10 +130,16 @@
                 content = [self contentOfFirstSpan:td];
             } else if ([title isEqualToString:@"法定代表人"]) {
                 content = [self contentOfRepresentative:td];
-            } else if ([title isEqualToString:@"注册地址"]) {
+            } else if ([title isEqualToString:@"<span>注册地址"]) {
                 content = [self contentOfRegisteredAddress:td];
+            } else if ([title isEqualToString:@"成立日期"]) {
+                content = [self contentOfFirstSpan:td];
+            } else if ([title isEqualToString:@"经营范围"]) {
+                content = [self contentOfFirstSpan:td];
             } else if ([title isEqualToString:@"营业期限"]) {
                 content = [self contentOfBusinessTerm:td];
+            } else if ([title isEqualToString:@"核准日期"]) {
+                content = [self contentOfFirstSpan:td];
             } else {
                 content = [self contentOfTd:td];
             }

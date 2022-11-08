@@ -10,6 +10,7 @@
 #import "FacematchController.h"
 #import "PictureNamingController.h"
 #import "ImageTransController.h"
+#import "TYCController.h"
 
 @interface AppDelegate ()
 
@@ -23,12 +24,15 @@
     
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     
-    ViewController *vc = [[ViewController alloc] init];
+//    ViewController *vc = [[ViewController alloc] init];
 //    FacematchController *vc = [[FacematchController alloc] init];
 //    PictureNamingController *vc = [[PictureNamingController alloc] init];
     
     // 图片转换
 //    ImageTransController *vc = [[ImageTransController alloc] init];
+    
+    // 天眼查 ZZ生成
+    TYCController *vc = [[TYCController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nav;

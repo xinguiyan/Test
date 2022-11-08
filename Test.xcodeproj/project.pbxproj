@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		141CE49D2810342200D7C6FC /* 123.png in Resources */ = {isa = PBXBuildFile; fileRef = 141CE49C2810342200D7C6FC /* 123.png */; };
 		141D87D128102C94002DDBAF /* ImageTransController.m in Sources */ = {isa = PBXBuildFile; fileRef = 141D87D028102C94002DDBAF /* ImageTransController.m */; };
+		251F4ED12919D99900315A38 /* TYCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 251F4ED02919D99900315A38 /* TYCController.m */; };
+		251F4ED3291A068800315A38 /* 1-1.csv in Resources */ = {isa = PBXBuildFile; fileRef = 251F4ED2291A068800315A38 /* 1-1.csv */; };
 		571328A88C9E2BAAC4EA9307 /* Pods_Test.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6B3ACC020E76CA94C6C320 /* Pods_Test.framework */; };
 		BD4AFAC02648DB2D0049222C /* PictureNamingController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4AFABF2648DB2D0049222C /* PictureNamingController.m */; };
 		BD60585C268026F5004998F4 /* TianyanchaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD60585B268026F5004998F4 /* TianyanchaManager.m */; };
@@ -42,6 +44,9 @@
 		141D87CF28102C94002DDBAF /* ImageTransController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageTransController.h; sourceTree = "<group>"; };
 		141D87D028102C94002DDBAF /* ImageTransController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageTransController.m; sourceTree = "<group>"; };
 		147772E72779FEAC0023826F /* libAFNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libAFNetworking.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		251F4ECF2919D99900315A38 /* TYCController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TYCController.h; sourceTree = "<group>"; };
+		251F4ED02919D99900315A38 /* TYCController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TYCController.m; sourceTree = "<group>"; };
+		251F4ED2291A068800315A38 /* 1-1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "1-1.csv"; sourceTree = "<group>"; };
 		5E6B3ACC020E76CA94C6C320 /* Pods_Test.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Test.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6A42332C79C7C099CB45AB2 /* Pods-Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Test.release.xcconfig"; path = "Target Support Files/Pods-Test/Pods-Test.release.xcconfig"; sourceTree = "<group>"; };
 		BD4AFABE2648DB2C0049222C /* PictureNamingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PictureNamingController.h; sourceTree = "<group>"; };
@@ -196,6 +201,7 @@
 				141D87CE28102C7C002DDBAF /* image */,
 				BD6058592680261F004998F4 /* manager */,
 				BDDAE1F3263E93E900457C9D /* 1.csv */,
+				251F4ED2291A068800315A38 /* 1-1.csv */,
 				BD856FBD2647CC7600E17909 /* 2.csv */,
 				BDFA6E6425A34004005C59CF /* AppDelegate.h */,
 				BDFA6E6525A34004005C59CF /* AppDelegate.m */,
@@ -224,6 +230,8 @@
 				BDA23FCE2625D405000B3B8B /* WebViewController.m */,
 				BDA23FDF2625EA1F000B3B8B /* WKWebView+Custom.h */,
 				BDA23FE02625EA1F000B3B8B /* WKWebView+Custom.m */,
+				251F4ECF2919D99900315A38 /* TYCController.h */,
+				251F4ED02919D99900315A38 /* TYCController.m */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -301,6 +309,7 @@
 				BD856FBE2647CC7600E17909 /* 2.csv in Resources */,
 				BD856FC22647F69300E17909 /* BRCity.json in Resources */,
 				BDFA6E7125A34006005C59CF /* Assets.xcassets in Resources */,
+				251F4ED3291A068800315A38 /* 1-1.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +370,7 @@
 				BD60586526803AF0004998F4 /* LocalQccManager.m in Sources */,
 				BDDAE20626423F6000457C9D /* FacematchController.m in Sources */,
 				BDFA6E6625A34004005C59CF /* AppDelegate.m in Sources */,
+				251F4ED12919D99900315A38 /* TYCController.m in Sources */,
 				BDFA6E7725A34006005C59CF /* main.m in Sources */,
 				BD4AFAC02648DB2D0049222C /* PictureNamingController.m in Sources */,
 				BD60585F268029C8004998F4 /* QccManager.m in Sources */,

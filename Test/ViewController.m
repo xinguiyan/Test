@@ -52,8 +52,8 @@
     
     NSArray *companys = [self readCsv];
 //    NSArray *companys = @[
-//    @{@"serial": @"76", @"name": @"鄂尔多斯市臻熙佑钰商贸有限公司"},
-//    @{@"serial": @"91", @"name": @"天津市滨海新区恒泽商贸有限公司"},
+//    @{@"serial": @"1", @"name": @"江苏汇屹图科技有限公司"},
+//    @{@"serial": @"2", @"name": @"妮瑄（重庆）贸易有限公司"},
 //    ];
     for (NSDictionary *dict in companys) {
         NSArray *values = [self getCompanyInfo:dict];
@@ -350,7 +350,7 @@
     CIImage *image = [filter outputImage];
     
     // 4.高清处理: size 要大于等于视图显示的尺寸
-    UIImage *img = [self createNonInterpolatedUIImageFromCIImage:image size:440];
+    UIImage *img = [self createNonInterpolatedUIImageFromCIImage:image size:310];
     
     return img;
 }
