@@ -42,15 +42,17 @@ static const NSArray *titles = @[
     
     NSLog(@"path : %@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
     
-    NSArray *companys = [self mergeCsv];
-    for (NSDictionary *dict in companys) {
-        NSArray *values = dict[@"值"];
-        if (values.count) {
-            NSString *name = [NSString stringWithFormat:@"%@-%@", dict[@"序号"], dict[@"名称"]];
-            [self writeToFile:name content:values];
-        }
-        [NSThread sleepForTimeInterval:0.1];
-    }
+//    NSArray *companys = [self mergeCsv];
+//    for (NSDictionary *dict in companys) {
+//        NSArray *values = dict[@"值"];
+//        if (values.count) {
+//            NSString *name = [NSString stringWithFormat:@"%@-%@", dict[@"序号"], dict[@"名称"]];
+//            [self writeToFile:name content:values];
+//        }
+//        [NSThread sleepForTimeInterval:0.1];
+//    }
+    
+    [self readText];
     
     NSLog(@"结束啦");
 }
@@ -559,6 +561,43 @@ static const NSArray *titles = @[
     CGImageRelease(bitmapImage);
     
     return [UIImage imageWithCGImage:scaledImage];
+}
+
+#pragma mark - 天眼查txt（20230807）
+
+- (void)readText {
+    NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    dir = [dir stringByAppendingPathComponent:@"TEXT"];
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    BOOL isExit = [manager fileExistsAtPath:dir isDirectory:&isDirectory];
+    if (!isExit || !isDirectory) {
+        NSLog(@"不存在html文件夹");
+        return;
+    }
+    
+    NSError *error;
+    NSArray *files = [manager contentsOfDirectoryAtPath:dir error:&error];
+    if (error) {
+        NSLog(@"读取文件错误：%@", error);
+        return;
+    }
+    
+    for (NSString *file in files) {
+        NSLog(@"111111 : %@", dir);
+        NSLog(@"111111 : %@", file);
+
+        NSString *content = [NSString stringWithContentsOfFile:[dir stringByAppendingFormat:@"/%@", file]
+                                                      encoding:NSUTF8StringEncoding
+                                                         error:nil];
+        NSArray *array = [content componentsSeparatedByString:@"\n"];
+        for (NSString *tmp in array) {
+            if ([tmp isNotBlank]) {
+                NSLog(@"111111 : %@", tmp);
+            }
+        }
+    }
 }
 
 @end
