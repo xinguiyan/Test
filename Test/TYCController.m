@@ -9,8 +9,8 @@
 
 static const NSArray *titles = @[
     @"统一社会信用代码", // 0
-    @"企业名称",       // 1
-    @"企业类型",       // 2
+    @"公司名称",       // 1
+    @"公司类型",       // 2
     @"注册地址",       // 3
     @"法定代表人",     // 4
     @"注册资本",       // 5
@@ -52,7 +52,7 @@ static const NSArray *titles = @[
 //        [NSThread sleepForTimeInterval:0.1];
 //    }
     
-    [self readText];
+    [self readCSV];
     
     NSLog(@"结束啦");
 }
@@ -565,7 +565,28 @@ static const NSArray *titles = @[
 
 #pragma mark - 天眼查txt（20230807）
 
-- (void)readText {
+- (void)readCSV {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"csv"];
+    NSError *error = nil;
+    NSString *content = [NSString stringWithContentsOfFile:path
+                                                  encoding:NSUTF8StringEncoding
+                                                     error:&error];
+    NSArray *rows = [content componentsSeparatedByString:@"\r\n"];
+    
+    if (rows.count == 0) {
+        NSLog(@"文件错误，行数为0");
+        return;
+    }
+    
+    for (NSString *string in rows) {
+        NSArray *values = [string componentsSeparatedByString:@","];
+        if (values.count > 0) {
+            [self readText:[rows indexOfObject:string]+1 name:values[0]];
+        }
+    }
+}
+
+- (void)readText:(NSInteger)index name:(NSString *)name {
     NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     dir = [dir stringByAppendingPathComponent:@"TEXT"];
     
@@ -573,7 +594,7 @@ static const NSArray *titles = @[
     BOOL isDirectory;
     BOOL isExit = [manager fileExistsAtPath:dir isDirectory:&isDirectory];
     if (!isExit || !isDirectory) {
-        NSLog(@"不存在html文件夹");
+        NSLog(@"不存在TEXT文件夹");
         return;
     }
     
@@ -585,17 +606,37 @@ static const NSArray *titles = @[
     }
     
     for (NSString *file in files) {
-        NSLog(@"111111 : %@", dir);
-        NSLog(@"111111 : %@", file);
-
-        NSString *content = [NSString stringWithContentsOfFile:[dir stringByAppendingFormat:@"/%@", file]
-                                                      encoding:NSUTF8StringEncoding
-                                                         error:nil];
-        NSArray *array = [content componentsSeparatedByString:@"\n"];
-        for (NSString *tmp in array) {
-            if ([tmp isNotBlank]) {
-                NSLog(@"111111 : %@", tmp);
+        if ([file containsString:name]) {
+            NSString *content = [NSString stringWithContentsOfFile:[dir stringByAppendingFormat:@"/%@", file]
+                                                          encoding:NSUTF8StringEncoding
+                                                             error:nil];
+            NSArray *array = [content componentsSeparatedByString:@","];
+            NSMutableArray *arr = [NSMutableArray array];
+            for (NSString *tmp in array) {
+                if ([tmp isNotBlank]) {
+                    NSString *value = [tmp stringByReplacingOccurrencesOfString:@"\r\n" withString:@""];
+                    [arr addObject:value];
+                }
             }
+            
+            NSMutableArray *values = [NSMutableArray array];
+            for (NSString *title in titles) {
+                NSInteger index = [arr indexOfObject:title];
+                if (index == NSNotFound || index+1 >= arr.count) {
+                    NSLog(@"没找到");
+                    break;
+                }
+                [values addObject:arr[index+1]];
+            }
+            
+            if (values.count < 11) {
+                continue;
+            }
+            
+            NSString *name = [NSString stringWithFormat:@"%ld-%@",
+                              index,
+                              values[1]];
+            [self writeToFile:name content:values];
         }
     }
 }
