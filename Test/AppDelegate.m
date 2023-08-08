@@ -11,6 +11,7 @@
 #import "PictureNamingController.h"
 #import "ImageTransController.h"
 #import "TYCController.h"
+#import "AQCController.h"
 
 @interface AppDelegate ()
 
@@ -32,7 +33,10 @@
 //    ImageTransController *vc = [[ImageTransController alloc] init];
     
     // 天眼查 ZZ生成
-    TYCController *vc = [[TYCController alloc] init];
+//    TYCController *vc = [[TYCController alloc] init];
+    
+    // 爱企查 ZZ生成
+    AQCController *vc = [[AQCController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nav;

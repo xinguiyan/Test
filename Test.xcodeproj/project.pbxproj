@@ -37,6 +37,7 @@
 		BDFA6E7725A34006005C59CF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BDFA6E7625A34006005C59CF /* main.m */; };
 		BDFA6E8125A340CB005C59CF /* OneController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDFA6E8025A340CB005C59CF /* OneController.m */; };
 		BDFA6E8725A340D6005C59CF /* TwoController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDFA6E8625A340D6005C59CF /* TwoController.m */; };
+		E24BBED42A827142002B2AD0 /* AQCController.m in Sources */ = {isa = PBXBuildFile; fileRef = E24BBED32A827142002B2AD0 /* AQCController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +96,8 @@
 		BDFA6E8025A340CB005C59CF /* OneController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OneController.m; sourceTree = "<group>"; };
 		BDFA6E8525A340D6005C59CF /* TwoController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TwoController.h; sourceTree = "<group>"; };
 		BDFA6E8625A340D6005C59CF /* TwoController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwoController.m; sourceTree = "<group>"; };
+		E24BBED22A827142002B2AD0 /* AQCController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AQCController.h; sourceTree = "<group>"; };
+		E24BBED32A827142002B2AD0 /* AQCController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AQCController.m; sourceTree = "<group>"; };
 		ECF24A3D8D41607ADD4F41A1 /* Pods-Test.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Test.debug.xcconfig"; path = "Target Support Files/Pods-Test/Pods-Test.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,6 +235,8 @@
 				BDA23FE02625EA1F000B3B8B /* WKWebView+Custom.m */,
 				251F4ECF2919D99900315A38 /* TYCController.h */,
 				251F4ED02919D99900315A38 /* TYCController.m */,
+				E24BBED22A827142002B2AD0 /* AQCController.h */,
+				E24BBED32A827142002B2AD0 /* AQCController.m */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -381,6 +386,7 @@
 				BDDAE3142642DB7900457C9D /* MMLocationParser.m in Sources */,
 				BDA23FD62625D705000B3B8B /* URLSchemeHandler.m in Sources */,
 				BDFA6E8125A340CB005C59CF /* OneController.m in Sources */,
+				E24BBED42A827142002B2AD0 /* AQCController.m in Sources */,
 				BDA23FE12625EA1F000B3B8B /* WKWebView+Custom.m in Sources */,
 				BDFA6E8725A340D6005C59CF /* TwoController.m in Sources */,
 			);
