@@ -194,17 +194,18 @@ static const NSArray *titles = @[
 // 格式化注册资本
 - (NSString *)formatMoney:(NSString *)money {
     NSString *string = money;
+    string = [string stringByReplacingOccurrencesOfString:@"$" withString:@""];
     
     NSString *regStr = [NSString stringWithFormat:@"[0-9.]*"];
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:regStr
                                                                            options:0
                                                                              error:nil];
-    NSRange range = [regex rangeOfFirstMatchInString:money
+    NSRange range = [regex rangeOfFirstMatchInString:string
                                              options:0
-                                               range:NSMakeRange(0, money.length)];
+                                               range:NSMakeRange(0, string.length)];
     if (range.location != NSNotFound) {
-        NSString *f = [money substringWithRange:range];
-        NSString *u = [money substringFromIndex:range.location+range.length];
+        NSString *f = [string substringWithRange:range];
+        NSString *u = [string substringFromIndex:range.location+range.length];
         if ([u isEqualToString:@"万人民币"]) {
             u = @"万元人民币";
         }
@@ -234,7 +235,7 @@ static const NSArray *titles = @[
         return @"-";
     }
     
-    NSString *string;
+    NSString *string = date;
     
     NSArray *array = [date componentsSeparatedByString:@"-"];
     if (array.count != 3) {
